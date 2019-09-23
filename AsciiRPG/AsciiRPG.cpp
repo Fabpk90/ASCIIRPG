@@ -14,6 +14,10 @@ int main()
 {
 	
 	Map m("map.txt");
+	while (true)
+	{
+
+	}
 	m.Draw();
 
     return 0;

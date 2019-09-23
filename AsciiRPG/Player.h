@@ -27,5 +27,7 @@ public:
 
 	char GetCharacter() { return characterOnMap; }
 	WORD GetColor() { return color; }
+
+	void HandleInput();
 };
 
