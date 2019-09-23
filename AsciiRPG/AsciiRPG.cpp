@@ -8,13 +8,13 @@
 
 #include "Constants.h"
 #include "Map.h"
+#include "GameManager.h"
 
 int main()
 {
+	
 	Map m("map.txt");
 	m.Draw();
-
-	getchar();
 
     return 0;
 }

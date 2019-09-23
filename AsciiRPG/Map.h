@@ -5,17 +5,22 @@
 #include <windows.h>
 #include "Player.h"
 
+struct Tile
+{
+	char character;
+	WORD mask;
+};
+
 class Map
 {
 
 private:
-	HANDLE hOutput;
+	CHAR_INFO* buffer;
+	Tile* tiles;
 
 	COORD dwBufferSize = { SCREEN_WIDTH,SCREEN_HEIGHT };
 	COORD dwBufferCoord = { 0, 0 };
 	SMALL_RECT rcRegion = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
-
-	CHAR_INFO buffer[SCREEN_HEIGHT][SCREEN_WIDTH];
 
 	Player* player;
 public:
