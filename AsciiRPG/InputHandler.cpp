@@ -24,7 +24,7 @@ DWORD InputHandler::getInput(INPUT_RECORD **eventBuffer)
 
 
 	/* Put the number of console input events into numEvents */
-	GetNumberOfConsoleInputEvents(GameManager::instance.handle, &numEvents);
+	GetNumberOfConsoleInputEvents(GameManager::instance.handleInput, &numEvents);
 
 
 	if (numEvents) /* if there's an event */
@@ -33,7 +33,7 @@ DWORD InputHandler::getInput(INPUT_RECORD **eventBuffer)
 		*eventBuffer = new INPUT_RECORD[numEvents];
 
 		/* Place the stored events into the eventBuffer pointer */
-		ReadConsoleInput(GameManager::instance.handle, *eventBuffer, numEvents, &numEventsRead);
+		ReadConsoleInput(GameManager::instance.handleInput, *eventBuffer, numEvents, &numEventsRead);
 	}
 
 

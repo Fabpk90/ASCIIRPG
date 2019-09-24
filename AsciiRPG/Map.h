@@ -5,11 +5,6 @@
 #include <windows.h>
 #include "Player.h"
 
-struct Tile
-{
-	char character;
-	WORD mask;
-};
 
 class Map
 {
@@ -22,11 +17,15 @@ private:
 	COORD dwBufferCoord = { 0, 0 };
 	SMALL_RECT rcRegion = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
 
+	void UpdateBuffer();
 	
+	
+
 public:
-	Player* player;
 	Map(const char* path);
 	~Map();
+
+	Player* player;
 
 	void Draw();
 

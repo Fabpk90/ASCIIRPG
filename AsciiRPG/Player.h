@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Windows.h>
+#include "Constants.h"
+#include "Tile.h"
 
 enum Direction
 {
@@ -18,8 +20,10 @@ private:
 	char characterOnMap;
 	WORD color = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED;
 
+	Tile** tiles;
+
 public:
-	Player(char c);
+	Player(char c, Tile** tiles);
 	~Player();
 
 	int GetX() { return x; }
@@ -29,5 +33,6 @@ public:
 	WORD GetColor() { return color; }
 
 	void HandleInput();
+	void ChangePosition(int x, int y);
 };
 

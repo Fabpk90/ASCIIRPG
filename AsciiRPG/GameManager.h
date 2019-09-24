@@ -10,7 +10,8 @@ public:
 	GameManager();
 	~GameManager();
 
-	HANDLE handle;
+	HANDLE handleOutput;
+	HANDLE handleInput;
 
 	InputHandler input;
 

@@ -7,8 +7,8 @@ GameManager GameManager::instance = GameManager();
 
 GameManager::GameManager()
 {
-	std::cout << "yay";
-	handle = (HANDLE)GetStdHandle(STD_OUTPUT_HANDLE);
+	handleOutput = (HANDLE)GetStdHandle(STD_OUTPUT_HANDLE);
+	handleInput = (HANDLE)GetStdHandle(STD_INPUT_HANDLE);
 }
 
 
