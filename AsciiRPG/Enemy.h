@@ -9,7 +9,7 @@ private:
 	int damage;
 
 public:
-	Enemy(int x, int y, int health, int damage, char c, WORD colorMask, Tile **tiles);
+	Enemy(int x, int y, int health, int damage, char c, WORD colorMask, std::vector<Tile*>& tiles);
 	~Enemy();
 
 	bool isObstacle() override;

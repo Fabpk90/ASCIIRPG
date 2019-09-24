@@ -17,6 +17,7 @@ public:
 	InputHandler input;
 
 	Map* m;
+	Tile *ground;
 
 	bool isGameRunning;
 

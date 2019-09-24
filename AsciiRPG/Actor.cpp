@@ -2,13 +2,10 @@
 
 #include "Constants.h"
 
-Actor::Actor(int x, int y, int health, int damage, char character, DWORD colorMask, Tile **tiles) : Tile(character, colorMask)
-, health(health), damage(damage), x(x), y(y)
+Actor::Actor(int x, int y, int health, int damage, char character, DWORD colorMask, std::vector<Tile*>& tiles, TileType type) : Tile(character, colorMask, type)
+, health(health), damage(damage), x(x), y(y), tiles(tiles)
 {
 	this->tiles = tiles;
-
-	(*tiles)[y * SCREEN_HEIGHT + x].character = character;
-	(*tiles)[y * SCREEN_HEIGHT + x].colorMask = colorMask;
 }
 
 Actor::~Actor()
@@ -27,10 +24,10 @@ void Actor::TakeDamage(int amount)
 	}
 }
 
-void Actor::SetTiles(Tile ** tiles)
+void Actor::SetTiles(std::vector<Tile*>& tiles)
 {
 	this->tiles = tiles;
 
-	(*tiles)[y * SCREEN_HEIGHT + x].character = character;
-	(*tiles)[y * SCREEN_HEIGHT + x].colorMask = colorMask;
+	tiles[y * SCREEN_HEIGHT + x]->character = character;
+	tiles[y * SCREEN_HEIGHT + x]->colorMask = colorMask;
 }

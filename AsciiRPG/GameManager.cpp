@@ -13,6 +13,7 @@ GameManager::GameManager()
 	isGameRunning = true;
 
 	m = nullptr;
+	ground = new Tile(' ', 0, ENV);
 }
 
 

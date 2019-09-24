@@ -4,8 +4,8 @@
 #include "Enemy.h"
 #include <iostream>
 
-Player::Player(int x, int y, int health, int damage, char c, Tile **tiles) 
-	: Actor(x, y, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles)
+Player::Player(int x, int y, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type)
+	: Actor(x, y, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles, type)
 {
 	dir = Direction::DOWN;
 	x = 2;
@@ -34,30 +34,42 @@ void Player::HandleInput()
 				{
 				case VK_LEFT:
 					if (x - 1 >= 0)
-						if (ChangePosition(x - 1, y))
-							dir = LEFT;
+					{
+						ChangePosition(x - 1, y);
+						dir = LEFT;
+					}
 							
 					break;
 				case VK_RIGHT:
 					if (x + 1 < SCREEN_WIDTH)
-						if (ChangePosition(x + 1, y))
-							dir = RIGHT;
+					{
+						dir = RIGHT;
+						ChangePosition(x + 1, y);
+					}
 					break;
 
 				case VK_UP:
 					if (y - 1 >= 0)
-						if (ChangePosition(x, y - 1))
-							dir = UP;
+					{
+						ChangePosition(x, y - 1);
+						dir = UP;
+					}
 					break;
 				case VK_DOWN:
 					if (y + 1 < SCREEN_HEIGHT)
-						if (ChangePosition(x, y + 1))
-							dir = DOWN;
+					{
+						ChangePosition(x, y + 1);
+						dir = DOWN;
+					}
 					break;
 
 				case VK_ESCAPE:
 					GameManager::instance.isGameRunning = false;
 					break;
+					
+				case VK_RETURN:
+					std::pair<int, int> pos = GetPositionFromDirection();
+					AttackAt(pos.first, pos.second);
 				}
 			}
 		}
@@ -66,17 +78,46 @@ void Player::HandleInput()
 	}
 }
 
+std::pair<int, int> Player::GetPositionFromDirection()
+{
+	std::pair<int, int> position;
+	switch (dir)
+	{
+	case UP:
+		position.first = x;
+		position.second = y - 1;
+		break;
+
+	case RIGHT:
+		position.first = x + 1;
+		position.second = y;
+		break;
+
+	case DOWN:
+		position.first = x;
+		position.second = y + 1;
+		break;
+
+	case LEFT:
+		position.first = x - 1;
+		position.second = y;
+		break;
+	default:
+		break;
+	}
+
+	return position;
+}
+
 bool Player::ChangePosition(int x, int y)
 {
 	//TODO: check collisions
 
-	if (!((*tiles)[y * SCREEN_HEIGHT + x]).isObstacle())
+	if (!(tiles[y * SCREEN_HEIGHT + x])->isObstacle())
 	{
-		(*tiles)[this->y * SCREEN_HEIGHT + this->x].character = ' ';
-		(*tiles)[this->y * SCREEN_HEIGHT + this->x].colorMask = 0;
+		tiles[this->y * SCREEN_HEIGHT + this->x] = GameManager::instance.ground;
 
-		(*tiles)[y * SCREEN_HEIGHT + x].character = character;
-		(*tiles)[y * SCREEN_HEIGHT + x].colorMask = colorMask;
+		tiles[y * SCREEN_HEIGHT + x] = this;
 
 		this->y = y;
 		this->x = x;
@@ -89,12 +130,12 @@ bool Player::ChangePosition(int x, int y)
 
 bool Player::AttackAt(int x, int y)
 {
-	if (!((*tiles)[y * SCREEN_HEIGHT + x]).isObstacle())
-	{
-		if (Enemy* enemy = dynamic_cast<Enemy*>((&((*tiles))[y * SCREEN_HEIGHT + x])))
-		{
+	Tile *tile = tiles[y * SCREEN_HEIGHT + x];
 
-		}
+	if (tile->type == ENEMY)
+	{
+		Enemy* e = static_cast<Enemy*>(tiles[y * SCREEN_HEIGHT + x]);
+		e->TakeDamage(damage);
 
 		return true;
 	}

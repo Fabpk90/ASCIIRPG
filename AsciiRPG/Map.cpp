@@ -9,16 +9,13 @@
 Map::Map(const char * path)
 {
 	buffer = new CHAR_INFO[SCREEN_HEIGHT * SCREEN_WIDTH];
-	tiles = new Tile[SCREEN_HEIGHT * SCREEN_WIDTH];
-
-	
+	tiles = std::vector<Tile*>(SCREEN_HEIGHT * SCREEN_WIDTH);
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
 		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
-			tiles[i * SCREEN_HEIGHT + j].character = ' ';
-			tiles[i * SCREEN_HEIGHT + j].colorMask = 0;
+			tiles[i * SCREEN_HEIGHT + j] = new Tile(' ', 0, ENV);
 		}
 	}
 
@@ -26,18 +23,25 @@ Map::Map(const char * path)
 	ReadConsoleOutput(GameManager::instance.handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
 	LoadMap(path);
-	player = new Player(3, 2, 10, 2, '@', &tiles);
-	enemy = new Enemy(3, 3, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, &tiles);
+	player = new Player(2, 2, 10, 2, '@', tiles, TileType::PLAYER);
+	enemy = new Enemy(3, 3, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
 
 	actors.push_back(player);
 	actors.push_back(enemy);
+
+	tiles[player->GetX() * SCREEN_HEIGHT + player->GetY()] = player;
+	tiles[enemy->GetX() * SCREEN_HEIGHT + enemy->GetY()] = enemy;
 }
 
 Map::~Map()
 {
 	delete player;
 	delete[] buffer;
-	delete[] tiles;
+	
+	for (Tile* t : tiles)
+	{
+		delete t;
+	}
 }
 
 void Map::Draw()
@@ -49,7 +53,6 @@ void Map::Draw()
 
 	UpdateBuffer();
 
-
 	WriteConsoleOutput(GameManager::instance.handleOutput, (CHAR_INFO *)buffer, dwBufferSize,
 		dwBufferCoord, &rcRegion);
 }
@@ -60,8 +63,8 @@ void Map::UpdateBuffer()
 	{
 		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
-			buffer[i * SCREEN_HEIGHT + j].Char.AsciiChar = tiles[i * SCREEN_HEIGHT + j].character;
-			buffer[i * SCREEN_HEIGHT + j].Attributes = tiles[i * SCREEN_HEIGHT + j].colorMask;
+			buffer[i * SCREEN_HEIGHT + j].Char.AsciiChar = tiles[i * SCREEN_HEIGHT + j]->character;
+			buffer[i * SCREEN_HEIGHT + j].Attributes = tiles[i * SCREEN_HEIGHT + j]->colorMask;
 		}
 	}
 }
@@ -133,8 +136,8 @@ void Map::LoadMap(const char * path)
 		{
 			for (int j = 0; j < SCREEN_WIDTH; j++)
 			{
-				tiles[i * SCREEN_HEIGHT + j].character = ' ';
-				tiles[i * SCREEN_HEIGHT + j].colorMask = 0;
+				tiles[i * SCREEN_HEIGHT + j]->character = ' ';
+				tiles[i * SCREEN_HEIGHT + j]->colorMask = 0;
 			}
 		}
 
@@ -153,8 +156,8 @@ void Map::LoadMap(const char * path)
 					buffer[height * SCREEN_HEIGHT + width].Char.AsciiChar = str[i];
 					buffer[height * SCREEN_HEIGHT + width].Attributes = GetTileMaskValue((int)(str[i + 1] - '0'));
 
-					tiles[height * SCREEN_HEIGHT + width].character = str[i];
-					tiles[height * SCREEN_HEIGHT + width].colorMask = buffer[height * SCREEN_HEIGHT + width].Attributes;
+					tiles[height * SCREEN_HEIGHT + width]->character = str[i];
+					tiles[height * SCREEN_HEIGHT + width]->colorMask = buffer[height * SCREEN_HEIGHT + width].Attributes;
 
 					i++;
 				}

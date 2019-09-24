@@ -3,16 +3,16 @@
 #include <Windows.h>
 #include "Constants.h"
 #include "Actor.h"
+#include <utility>
 
 class Player : public Actor
 {
+private:
+	std::pair<int, int> GetPositionFromDirection();
 
 public:
-	Player(int x, int y, int health, int damage, char c, Tile **tiles);
+	Player(int x, int y, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type);
 	~Player();
-
-	int GetX() { return x; }
-	int GetY() { return y; }
 
 	void HandleInput();
 	bool ChangePosition(int x, int y);

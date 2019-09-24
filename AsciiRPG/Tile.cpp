@@ -4,9 +4,10 @@ Tile::Tile()
 {
 	character = ' ';
 	colorMask = 0;
+	type = ENV;
 }
 
-Tile::Tile(char character, WORD colorMask) : character(character), colorMask(colorMask)
+Tile::Tile(char character, WORD colorMask, TileType type) : character(character), colorMask(colorMask), type(type)
 {}
 
 
