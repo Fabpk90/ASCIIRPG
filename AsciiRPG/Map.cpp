@@ -10,8 +10,8 @@ Map::Map(const char * path)
 {
 	buffer = new CHAR_INFO[SCREEN_HEIGHT * SCREEN_WIDTH];
 	tiles = new Tile[SCREEN_HEIGHT * SCREEN_WIDTH];
-	player = new Player(10, 2, '@');  
-	player->tiles = &tiles;
+
+	
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
@@ -26,6 +26,11 @@ Map::Map(const char * path)
 	ReadConsoleOutput(GameManager::instance.handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
 	LoadMap(path);
+	player = new Player(3, 2, 10, 2, '@', &tiles);
+	enemy = new Enemy(3, 3, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, &tiles);
+
+	actors.push_back(player);
+	actors.push_back(enemy);
 }
 
 Map::~Map()
@@ -37,7 +42,10 @@ Map::~Map()
 
 void Map::Draw()
 {
-	player->HandleInput();
+	for (Actor* a : actors)
+	{
+		a->Update();
+	}
 
 	UpdateBuffer();
 
@@ -106,6 +114,21 @@ void Map::LoadMap(const char * path)
 
 	if (!stream.fail())
 	{
+		for (Actor* a : actors)
+		{
+			//TODO: find a better solution
+			if (auto p = dynamic_cast<Player*>(a))
+			{
+
+			}
+			else
+			{
+				delete a;
+			}
+		}
+
+		actors.clear();
+
 		for (int i = 0; i < SCREEN_HEIGHT; i++)
 		{
 			for (int j = 0; j < SCREEN_WIDTH; j++)
@@ -141,11 +164,5 @@ void Map::LoadMap(const char * path)
 			height++;
 		}
 		stream.close();
-
-		buffer[player->GetY() * SCREEN_HEIGHT + player->GetX()].Char.AsciiChar = player->character;
-		buffer[player->GetY() * SCREEN_HEIGHT + player->GetX()].Attributes = player->colorMask;
-
-		tiles[player->GetY() * SCREEN_HEIGHT + player->GetX()].character = player->character;
-		tiles[player->GetY() * SCREEN_HEIGHT + player->GetX()].colorMask = player->colorMask;
 	}
 }

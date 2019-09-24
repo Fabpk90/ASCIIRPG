@@ -4,25 +4,11 @@
 #include "Constants.h"
 #include "Actor.h"
 
-enum Direction
-{
-	UP,
-	RIGHT,
-	DOWN,
-	LEFT
-};
-
 class Player : public Actor
 {
-private:
-	int x;
-	int y;
-
-	Direction dir;
-
 
 public:
-	Player(int health, int damage, char c);
+	Player(int x, int y, int health, int damage, char c, Tile **tiles);
 	~Player();
 
 	int GetX() { return x; }
@@ -33,7 +19,6 @@ public:
 	bool AttackAt(int x, int y);
 
 	void Die() override;
-
-	Tile **tiles;
+	void Update() override;
 };
 

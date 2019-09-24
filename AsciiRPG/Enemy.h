@@ -1,16 +1,22 @@
 #pragma once
 
-#include "Tile.h"
+#include "Actor.h"
 
-class Enemy : public Tile
+class Enemy : public Actor
 {
 private:
 	int health;
 	int damage;
+
 public:
-	Enemy(int health, int damage);
+	Enemy(int x, int y, int health, int damage, char c, WORD colorMask, Tile **tiles);
 	~Enemy();
 
 	bool isObstacle() override;
+
+	// Hérité via Actor
+	virtual void Die() override;
+	virtual void Update() override;
+
 };
 

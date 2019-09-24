@@ -4,6 +4,8 @@
 #include <string>
 #include <windows.h>
 #include "Player.h"
+#include "Enemy.h"
+#include <vector>
 
 
 class Map
@@ -13,6 +15,9 @@ private:
 	CHAR_INFO* buffer;
 	Tile* tiles;
 	Player* player;
+	Enemy* enemy;
+
+	std::vector<Actor*> actors;
 
 	COORD dwBufferSize = { SCREEN_WIDTH,SCREEN_HEIGHT };
 	COORD dwBufferCoord = { 0, 0 };

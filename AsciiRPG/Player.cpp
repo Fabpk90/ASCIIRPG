@@ -4,7 +4,8 @@
 #include "Enemy.h"
 #include <iostream>
 
-Player::Player(int health, int damage, char c) : Actor(health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED)
+Player::Player(int x, int y, int health, int damage, char c, Tile **tiles) 
+	: Actor(x, y, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles)
 {
 	dir = Direction::DOWN;
 	x = 2;
@@ -104,4 +105,9 @@ bool Player::AttackAt(int x, int y)
 void Player::Die()
 {
 	GameManager::instance.isGameRunning = false;
+}
+
+void Player::Update()
+{
+	HandleInput();
 }
