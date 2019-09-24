@@ -16,9 +16,10 @@ int main()
 	Map m("map.txt");
 	while (true)
 	{
-
+		m.Draw();
+		m.player->HandleInput();
 	}
-	m.Draw();
+	
 
     return 0;
 }

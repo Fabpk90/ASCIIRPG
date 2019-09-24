@@ -22,8 +22,9 @@ private:
 	COORD dwBufferCoord = { 0, 0 };
 	SMALL_RECT rcRegion = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
 
-	Player* player;
+	
 public:
+	Player* player;
 	Map(const char* path);
 	~Map();
 

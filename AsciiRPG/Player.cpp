@@ -20,6 +20,11 @@ void Player::HandleInput()
 	INPUT_RECORD* inputBuffer;
 	DWORD numEventRead = GameManager::instance.input.getInput(&inputBuffer);
 
+	if (numEventRead != 0)
+	{
+		int i = 2;
+	}
+
 	for (int i = 0; i < numEventRead; i++)
 	{
 		switch (inputBuffer[i].EventType)
