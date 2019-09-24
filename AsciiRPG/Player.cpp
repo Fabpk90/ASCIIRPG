@@ -1,14 +1,14 @@
 #include "Player.h"
 
 #include "GameManager.h"
+#include "Enemy.h"
 #include <iostream>
 
-Player::Player(char c, Tile** tiles) 
+Player::Player(int health, int damage, char c) : Actor(health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED)
 {
-	characterOnMap = c;
+	dir = Direction::DOWN;
 	x = 2;
 	y = 3;
-	this->tiles = tiles;
 }
 
 
@@ -28,24 +28,34 @@ void Player::HandleInput()
 			switch (inputBuffer[i].EventType)
 			{
 			case KEY_EVENT:
+				if(inputBuffer[i].Event.KeyEvent.bKeyDown)
 				switch (inputBuffer[i].Event.KeyEvent.wVirtualKeyCode)
 				{
 				case VK_LEFT:
 					if (x - 1 >= 0)
-						ChangePosition(x - 1, y);
+						if (ChangePosition(x - 1, y))
+							dir = LEFT;
+							
 					break;
 				case VK_RIGHT:
 					if (x + 1 < SCREEN_WIDTH)
-						ChangePosition(x + 1, y);
+						if (ChangePosition(x + 1, y))
+							dir = RIGHT;
 					break;
 
 				case VK_UP:
 					if (y - 1 >= 0)
-						ChangePosition(x, y - 1);
+						if (ChangePosition(x, y - 1))
+							dir = UP;
 					break;
 				case VK_DOWN:
 					if (y + 1 < SCREEN_HEIGHT)
-						ChangePosition(x, y + 1);
+						if (ChangePosition(x, y + 1))
+							dir = DOWN;
+					break;
+
+				case VK_ESCAPE:
+					GameManager::instance.isGameRunning = false;
 					break;
 				}
 			}
@@ -53,24 +63,45 @@ void Player::HandleInput()
 
 		delete inputBuffer;
 	}
-
-	
-
 }
 
-void Player::ChangePosition(int x, int y)
+bool Player::ChangePosition(int x, int y)
 {
 	//TODO: check collisions
 
-	if ((*tiles)[y * SCREEN_HEIGHT + x].character == ' ')
+	if (!((*tiles)[y * SCREEN_HEIGHT + x]).isObstacle())
 	{
 		(*tiles)[this->y * SCREEN_HEIGHT + this->x].character = ' ';
-		(*tiles)[this->y * SCREEN_HEIGHT + this->x].mask = 0;
+		(*tiles)[this->y * SCREEN_HEIGHT + this->x].colorMask = 0;
 
-		(*tiles)[y * SCREEN_HEIGHT + x].character = characterOnMap;
-		(*tiles)[y * SCREEN_HEIGHT + x].mask = color;
+		(*tiles)[y * SCREEN_HEIGHT + x].character = character;
+		(*tiles)[y * SCREEN_HEIGHT + x].colorMask = colorMask;
 
 		this->y = y;
 		this->x = x;
+
+		return true;
 	}
+
+	return false;
+}
+
+bool Player::AttackAt(int x, int y)
+{
+	if (!((*tiles)[y * SCREEN_HEIGHT + x]).isObstacle())
+	{
+		if (Enemy* enemy = dynamic_cast<Enemy*>((&((*tiles))[y * SCREEN_HEIGHT + x])))
+		{
+
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+void Player::Die()
+{
+	GameManager::instance.isGameRunning = false;
 }

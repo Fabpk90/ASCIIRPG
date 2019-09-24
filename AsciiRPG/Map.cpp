@@ -10,58 +10,22 @@ Map::Map(const char * path)
 {
 	buffer = new CHAR_INFO[SCREEN_HEIGHT * SCREEN_WIDTH];
 	tiles = new Tile[SCREEN_HEIGHT * SCREEN_WIDTH];
+	player = new Player(10, 2, '@');  
+	player->tiles = &tiles;
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
 		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
 			tiles[i * SCREEN_HEIGHT + j].character = ' ';
-			tiles[i * SCREEN_HEIGHT + j].mask = 0;
+			tiles[i * SCREEN_HEIGHT + j].colorMask = 0;
 		}
 	}
 
 	//sert à init le buffer
 	ReadConsoleOutput(GameManager::instance.handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
-	player = new Player('@', &tiles);
-
-	std::ifstream stream(path);
-
-	if (!stream.fail())
-	{
-		std::string str;
-		char c;
-		int att = 0;
-		int width = 0;
-		int height = 0;
-		while (std::getline(stream ,str))
-		{
-			width = 0;
-			for (int i = 0; i < str.length(); i++)
-			{
-				if (str[i] != ' ')
-				{
-					buffer[height * SCREEN_HEIGHT + width].Char.AsciiChar = str[i];
-					buffer[height * SCREEN_HEIGHT + width].Attributes = GetTileMaskValue((int)(str[i+1] - '0'));
-
-					tiles[height * SCREEN_HEIGHT + width].character = str[i];
-					tiles[height * SCREEN_HEIGHT + width].mask = buffer[height * SCREEN_HEIGHT + width].Attributes;
-
-					i++;
-				}
-
-				width++;
-			}
-			height++;
-		}
-		stream.close();
-	}
-
-	buffer[player->GetY() * SCREEN_HEIGHT + player->GetX()].Char.AsciiChar = player->GetCharacter();
-	buffer[player->GetY() * SCREEN_HEIGHT + player->GetX()].Attributes = player->GetColor();
-
-	tiles[player->GetY() * SCREEN_HEIGHT + player->GetX()].character = player->GetCharacter();
-	tiles[player->GetY() * SCREEN_HEIGHT + player->GetX()].mask = player->GetColor();
+	LoadMap(path);
 }
 
 Map::~Map()
@@ -73,6 +37,8 @@ Map::~Map()
 
 void Map::Draw()
 {
+	player->HandleInput();
+
 	UpdateBuffer();
 
 
@@ -82,15 +48,12 @@ void Map::Draw()
 
 void Map::UpdateBuffer()
 {
-	tiles[player->GetY() * SCREEN_HEIGHT + player->GetX()].character = player->GetCharacter();
-	tiles[player->GetY() * SCREEN_HEIGHT + player->GetX()].mask = player->GetColor();
-
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
 		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
 			buffer[i * SCREEN_HEIGHT + j].Char.AsciiChar = tiles[i * SCREEN_HEIGHT + j].character;
-			buffer[i * SCREEN_HEIGHT + j].Attributes = tiles[i * SCREEN_HEIGHT + j].mask;
+			buffer[i * SCREEN_HEIGHT + j].Attributes = tiles[i * SCREEN_HEIGHT + j].colorMask;
 		}
 	}
 }
@@ -135,4 +98,54 @@ WORD Map::GetTileMaskValue(int val)
 	}
 
 	return d;
+}
+
+void Map::LoadMap(const char * path)
+{
+	std::ifstream stream(path);
+
+	if (!stream.fail())
+	{
+		for (int i = 0; i < SCREEN_HEIGHT; i++)
+		{
+			for (int j = 0; j < SCREEN_WIDTH; j++)
+			{
+				tiles[i * SCREEN_HEIGHT + j].character = ' ';
+				tiles[i * SCREEN_HEIGHT + j].colorMask = 0;
+			}
+		}
+
+		std::string str;
+		char c;
+		int att = 0;
+		int width = 0;
+		int height = 0;
+		while (std::getline(stream, str))
+		{
+			width = 0;
+			for (int i = 0; i < str.length(); i++)
+			{
+				if (str[i] != ' ')
+				{
+					buffer[height * SCREEN_HEIGHT + width].Char.AsciiChar = str[i];
+					buffer[height * SCREEN_HEIGHT + width].Attributes = GetTileMaskValue((int)(str[i + 1] - '0'));
+
+					tiles[height * SCREEN_HEIGHT + width].character = str[i];
+					tiles[height * SCREEN_HEIGHT + width].colorMask = buffer[height * SCREEN_HEIGHT + width].Attributes;
+
+					i++;
+				}
+
+				width++;
+			}
+			height++;
+		}
+		stream.close();
+
+		buffer[player->GetY() * SCREEN_HEIGHT + player->GetX()].Char.AsciiChar = player->character;
+		buffer[player->GetY() * SCREEN_HEIGHT + player->GetX()].Attributes = player->colorMask;
+
+		tiles[player->GetY() * SCREEN_HEIGHT + player->GetX()].character = player->character;
+		tiles[player->GetY() * SCREEN_HEIGHT + player->GetX()].colorMask = player->colorMask;
+	}
 }

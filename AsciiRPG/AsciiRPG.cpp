@@ -1,7 +1,7 @@
 // AsciiRPG.cpp : définit le point d'entrée pour l'application console.
 //
 
-#define WIN32_LEAN_AND_MEAN
+
 #include "stdafx.h"
 #include <iostream>
 #include <windows.h>
@@ -10,16 +10,16 @@
 #include "Map.h"
 #include "GameManager.h"
 
+#include "Player.h"
+
 int main()
 {
-	
-	Map m("map.txt");
-	while (true)
+	GameManager::instance.LoadMap("map.txt");
+
+	while (GameManager::instance.isGameRunning)
 	{
-		m.Draw();
-		m.player->HandleInput();
+		GameManager::instance.m->Draw();
 	}
-	
 
     return 0;
 }

@@ -5,12 +5,14 @@
 
 class Tile
 {
-
 public:
 	Tile();
+	Tile(char character, WORD colorMask);
 	~Tile();
 
 	char character;
-	WORD mask;
+	WORD colorMask;
+
+	virtual bool isObstacle();
 };
 

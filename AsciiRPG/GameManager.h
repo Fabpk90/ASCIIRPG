@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include "Constants.h"
 #include "InputHandler.h"
+#include "Map.h"
 
 class GameManager
 {
@@ -15,5 +16,11 @@ public:
 
 	InputHandler input;
 
+	Map* m;
+
+	bool isGameRunning;
+
 	static GameManager instance;
+
+	void LoadMap(const char *path);
 };
