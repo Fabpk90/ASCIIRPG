@@ -15,11 +15,11 @@ public:
 	Enemy(int x, int y, int health, int damage, char c, WORD colorMask, std::vector<Tile*>& tiles);
 	~Enemy();
 
-	bool isObstacle() override;
-
 	// Hérité via Actor
 	virtual void Die() override;
 	virtual void Update() override;
+
+	void FollowTarget();
 
 };
 

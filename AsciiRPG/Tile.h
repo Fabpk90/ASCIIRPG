@@ -5,6 +5,7 @@
 enum TileType
 {
 	ENV = 0,
+	TILE,
 	ENEMY,
 	PLAYER
 };
@@ -20,6 +21,6 @@ public:
 	WORD colorMask;
 	TileType type;
 
-	virtual bool isObstacle();
+	bool isObstacle();
 };
 

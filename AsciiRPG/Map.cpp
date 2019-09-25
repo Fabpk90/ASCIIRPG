@@ -23,7 +23,7 @@ Map::Map(const char * path)
 	ReadConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
 	LoadMap(path);
-	player = new Player(2, 2, 10, 2, '@', tiles, TileType::PLAYER);
+	player = new Player(2, 2, 30, 2, '@', tiles, TileType::PLAYER);
 	enemy = new Enemy(3, 3, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
 
 	actors.push_back(player);
@@ -42,6 +42,11 @@ Map::~Map()
 	{
 		delete t;
 	}
+	for (Actor* a : actors)
+	{
+		delete a;
+	}
+
 }
 
 void Map::Draw()
@@ -50,6 +55,21 @@ void Map::Draw()
 	{
 		a->Update();
 	}
+
+	//checks each frame if actors are to be deleted
+	if (actorsIndexToDestroy.size())
+	{
+		int i = 0;
+		for (int index : actorsIndexToDestroy)
+		{
+			delete actors[index];
+			actors.erase(actors.begin() + index - i);
+			i++;
+		}
+
+		actorsIndexToDestroy.clear();
+	}
+	
 
 	UpdateBuffer();
 
@@ -111,19 +131,33 @@ WORD Map::GetTileMaskValue(int val)
 	return d;
 }
 
+//called by an actor when he dies
+void Map::ActorDies(Actor * act)
+{
+	bool found = false;
+	for (int i = 0; i < actors.size() && !found; i++)
+	{
+		if (actors[i] == act)
+		{
+			actorsIndexToDestroy.push_back(i);
+
+			found = true;
+		}
+	}
+}
+
 void Map::LoadMap(const char * path)
 {
 	std::ifstream stream(path);
 
 	if (!stream.fail())
 	{
+		//clears all the actors because we are loading another map
 		for (Actor* a : actors)
 		{
 			//TODO: find a better solution
 			if (auto p = dynamic_cast<Player*>(a))
-			{
-
-			}
+			{}
 			else
 			{
 				delete a;
@@ -132,6 +166,7 @@ void Map::LoadMap(const char * path)
 
 		actors.clear();
 
+		//resets the tiles
 		for (int i = 0; i < SCREEN_HEIGHT; i++)
 		{
 			for (int j = 0; j < SCREEN_WIDTH; j++)
@@ -146,6 +181,8 @@ void Map::LoadMap(const char * path)
 		int att = 0;
 		int width = 0;
 		int height = 0;
+
+		//reads line by line the map
 		while (std::getline(stream, str))
 		{
 			width = 0;

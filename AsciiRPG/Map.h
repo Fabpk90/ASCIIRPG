@@ -24,6 +24,7 @@ private:
 	SMALL_RECT rcRegion = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
 
 	std::vector<Tile*> tiles;
+	std::vector<int> actorsIndexToDestroy;
 
 	void UpdateBuffer();
 
@@ -34,6 +35,10 @@ public:
 	void Draw();
 
 	WORD GetTileMaskValue(int val);
+
+	Player& GetPlayer() { return *player; }
+
+	void ActorDies(Actor* act);
 
 	//Assumes that the size doesn't change
 	void LoadMap(const char *path);
