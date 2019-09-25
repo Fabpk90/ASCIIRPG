@@ -5,21 +5,25 @@
 #include "Constants.h"
 #include "GameManager.h"
 #include <time.h>
+#include <Windows.h>
 
 
+std::vector<Tile *>* Dungeon::tiles = nullptr;
 
-Dungeon::Dungeon(int nb_room)
+
+/*Dungeon::Dungeon(int nb_room)
 {
-	this->nb_room = nb_room;
-	this->tiles = new Tile[SCREEN_HEIGHT * SCREEN_WIDTH];
-
-	srand(time(NULL));
 }
 
 Dungeon::~Dungeon()
 {
 	delete[] tiles;
-}
+}*/
+
+/*Tile & Dungeon::getTiles()
+{
+	return *tiles;
+}*/
 
 int Dungeon::random(int n){
 	return rand() % n;
@@ -36,17 +40,15 @@ void Dungeon::drawRectangle(int x, int y, int size) {
 			
 			/*Create an empty room*/
 			if (j == x || j == x + size - 1 || i == y || i == y + size - 1) {
-				std::cout << 'X';
-				this->tiles[y * SCREEN_HEIGHT + x].character = 'X';
-				this->tiles[y * SCREEN_HEIGHT + x].colorMask = FOREGROUND_BLUE;
+				
+				(*tiles)[y * SCREEN_HEIGHT + x]->character = 'X';
+				(*tiles)[y * SCREEN_HEIGHT + x]->colorMask = FOREGROUND_BLUE;
 			}
 			
 			else {
-				std::cout << ' ';
-				this->tiles[y * SCREEN_HEIGHT + x].character = ' ';
+				(*tiles)[y * SCREEN_HEIGHT + x]->character = ' ';
 			}
 		}
-		std::cout << std::endl;
 	}
 }
 
@@ -55,37 +57,48 @@ int Dungeon::selectAlmostRandomWall(int x, int y, int size) {
 	std::vector<int> tab_selectable_walls;
 	int random_index = -1;
 
-	for (int i = x + 1; i < x + size - 2; i++) {
+	for (int i = x + 1; i < x + size - 1; i++) {
 		tab_selectable_walls.push_back(y * SCREEN_HEIGHT + x);
-		tab_selectable_walls.push_back(y + size - 2 * SCREEN_HEIGHT + x);
+		tab_selectable_walls.push_back((y + size - 1) * SCREEN_HEIGHT + x);
 	}
 
-	for (int j = y + 1; j < y + size - 2; j++) {
+	for (int j = y + 1; j < y + size - 1; j++) {
 		tab_selectable_walls.push_back(y * SCREEN_HEIGHT + x);
-		tab_selectable_walls.push_back(y * SCREEN_HEIGHT + x + size - 2);
+		tab_selectable_walls.push_back(y * SCREEN_HEIGHT + (x + size - 1));
 	}
 
 	random_index = random(tab_selectable_walls.size());
-	std::cout << tab_selectable_walls[random_index] << std::endl;
 	return tab_selectable_walls[random_index];
 	
 }
 
 
-void Dungeon::GenAlea() {
+std::vector<Tile *>* Dungeon::GenAlea(int nb_room) {
+	/* Attributes creation */
+
+	nb_room = nb_room;
+	tiles = new std::vector<Tile*>(SCREEN_HEIGHT * SCREEN_WIDTH);
+
+	for (int i = 0; i < SCREEN_HEIGHT; i++) {
+		for (int j = 0; j < SCREEN_WIDTH; j++) {
+			(*tiles)[i * SCREEN_HEIGHT + j] = new Tile('.', 0, ENV);
+		}
+	}
+
+	srand(time(NULL));
+
+	/*Initializing variables for the random generation*/
+
 	int random_size = 12;
 	int random_coord_x = 0;
 	int random_coord_y = 0;
 
 	int wall_break = 0;
-	
 
-	/* Standard size for every kind of room :
-	Big : 12*12 (100 tiles for move)
-	Medium : 8*8 (36 tiles for move)
-	Small : 6*6 (16 tiles for move) */
+	int i = 0;
 
-	/* Generating random coord for the first room*/
+
+	/* Generating random coord and size for the first room*/
 	random_coord_x = random(SCREEN_HEIGHT);
 	random_coord_y = random(SCREEN_WIDTH);
 	random_size = random(13);
@@ -95,28 +108,29 @@ void Dungeon::GenAlea() {
 		random_size = 4;
 	}
 
-	this->drawRectangle(random_coord_x, random_coord_y, random_size);
+	drawRectangle(random_coord_x, random_coord_y, random_size);
 
-	/* While i != nb_room */
-	/* getting random wall coord from the current room */
-	wall_break = selectAlmostRandomWall(random_coord_x, random_coord_y, random_size);
-	
-	/*Changing tiles to make a X become ' ' */
-	this->tiles[wall_break].character = ' ';
+	//while (i <= nb_room) {
+		/* getting random wall coord from the current room */
+		wall_break = selectAlmostRandomWall(random_coord_x, random_coord_y, random_size);
 
-	//drawRectangle(random_coord_x, random_coord_y, random_size);
-	/*getting random size */
-	random_size = random(13);
+		/*Changing tiles to make a X become ' ' */
+		//tiles[wall_break]->character = ' ';
 
-	/*Impossible to walk in a smaller room*/
-	if (random_size < 4) {
-		random_size = 4;
-	}
+		//drawRectangle(random_coord_x, random_coord_y, random_size);
+		/*getting random size */
+		random_size = random(13);
 
-	/* check collision */
-	/*if (!intersect()) {
-		drawRectangle(random_coord_x, random_coord_y, random_size);
-	}*/
+		/*Impossible to walk in a smaller room*/
+		if (random_size < 4) {
+			random_size = 4;
+		}
 
-	/* Return a Tile matrice*/
+		/* check collision */
+		/*if (!intersect()) {
+			drawRectangle(random_coord_x, random_coord_y, random_size);
+		}*/
+	//}
+
+		return tiles;
 }

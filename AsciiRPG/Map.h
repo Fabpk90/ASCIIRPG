@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include <vector>
+#include "Dungeon.h"
 
 
 class Map
@@ -13,7 +14,7 @@ class Map
 
 private:
 	CHAR_INFO* buffer;
-	
+
 	Player* player;
 	Enemy* enemy;
 
@@ -23,7 +24,7 @@ private:
 	COORD dwBufferCoord = { 0, 0 };
 	SMALL_RECT rcRegion = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
 
-	std::vector<Tile*> tiles;
+	std::vector<Tile*>* tiles;
 
 	void UpdateBuffer();
 
@@ -38,4 +39,3 @@ public:
 	//Assumes that the size doesn't change
 	void LoadMap(const char *path);
 };
-
