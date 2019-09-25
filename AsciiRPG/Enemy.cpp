@@ -3,10 +3,14 @@
 #include "Constants.h"
 #include "GameManager.h"
 
+#include <iostream>
+
 
 Enemy::Enemy(int x, int y, int health, int damage, char c, WORD colorMask, std::vector<Tile*>& tiles)
 	: Actor(x, y, health, damage, c, colorMask, tiles, TileType::ENEMY)
-{}
+{
+	framePassed = 0;
+}
 
 
 Enemy::~Enemy()
@@ -30,6 +34,7 @@ void Enemy::Update()
 	if ((++framePassed % frameBeforeTick) == 0)
 	{
 		ChangePosition(x + 1, y);
+		framePassed = 0;
 	}
 
 }
