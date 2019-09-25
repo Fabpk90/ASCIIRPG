@@ -15,8 +15,7 @@ public:
 	~Player();
 
 	void HandleInput();
-	bool ChangePosition(int x, int y);
-	bool AttackAt(int x, int y);
+	
 
 	void Die() override;
 	void Update() override;

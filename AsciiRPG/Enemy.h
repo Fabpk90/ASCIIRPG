@@ -8,6 +8,9 @@ private:
 	int health;
 	int damage;
 
+	int framePassed;
+	const int frameBeforeTick = 50;
+
 public:
 	Enemy(int x, int y, int health, int damage, char c, WORD colorMask, std::vector<Tile*>& tiles);
 	~Enemy();

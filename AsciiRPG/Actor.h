@@ -23,7 +23,7 @@ protected:
 	Direction dir;
 
 public:
-	Actor(int x, int y, int health, int damage, char character, DWORD colorMask, std::vector<Tile*>& tiles, TileType type);
+	Actor(int x, int y, int health, int damage, char character, WORD colorMask, std::vector<Tile*>& tiles, TileType type);
 	~Actor();
 
 	int GetX() { return x; }
@@ -33,6 +33,9 @@ public:
 	virtual void Update() = 0;
 
 	virtual void TakeDamage(int amount);
+
+	bool ChangePosition(int x, int y);
+	bool AttackAt(int x, int y);
 
 	void SetTiles(std::vector<Tile*>& tiles);
 };

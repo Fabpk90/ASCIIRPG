@@ -20,7 +20,7 @@ Player::~Player()
 void Player::HandleInput()
 {
 	INPUT_RECORD* inputBuffer = nullptr;
-	DWORD numEventRead = GameManager::instance.input.getInput(&inputBuffer);
+	DWORD numEventRead = GameManager::GetInstance().getInput(&inputBuffer);
 
 	if (numEventRead)
 	{
@@ -64,7 +64,7 @@ void Player::HandleInput()
 					break;
 
 				case VK_ESCAPE:
-					GameManager::instance.isGameRunning = false;
+					GameManager::GetInstance().isGameRunning = false;
 					break;
 					
 				case VK_RETURN:
@@ -109,43 +109,9 @@ std::pair<int, int> Player::GetPositionFromDirection()
 	return position;
 }
 
-bool Player::ChangePosition(int x, int y)
-{
-	//TODO: check collisions
-
-	if (!(tiles[y * SCREEN_HEIGHT + x])->isObstacle())
-	{
-		tiles[this->y * SCREEN_HEIGHT + this->x] = GameManager::instance.ground;
-
-		tiles[y * SCREEN_HEIGHT + x] = this;
-
-		this->y = y;
-		this->x = x;
-
-		return true;
-	}
-
-	return false;
-}
-
-bool Player::AttackAt(int x, int y)
-{
-	Tile *tile = tiles[y * SCREEN_HEIGHT + x];
-
-	if (tile->type == ENEMY)
-	{
-		Enemy* e = static_cast<Enemy*>(tiles[y * SCREEN_HEIGHT + x]);
-		e->TakeDamage(damage);
-
-		return true;
-	}
-
-	return false;
-}
-
 void Player::Die()
 {
-	GameManager::instance.isGameRunning = false;
+	GameManager::GetInstance().isGameRunning = false;
 }
 
 void Player::Update()

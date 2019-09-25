@@ -36,9 +36,6 @@
     <ClInclude Include="GameManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="InputHandler.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Tile.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -63,9 +60,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="GameManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="InputHandler.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Tile.cpp">

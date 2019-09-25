@@ -20,10 +20,16 @@ bool Enemy::isObstacle()
 
 void Enemy::Die()
 {
-	tiles[y * SCREEN_HEIGHT + x] = GameManager::instance.ground;
+	tiles[y * SCREEN_HEIGHT + x] = GameManager::GetInstance().ground;
 }
 
 void Enemy::Update()
 {
 	//TODO: AI !
+
+	if ((++framePassed % frameBeforeTick) == 0)
+	{
+		ChangePosition(x + 1, y);
+	}
+
 }

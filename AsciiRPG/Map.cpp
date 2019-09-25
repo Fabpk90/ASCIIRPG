@@ -20,7 +20,7 @@ Map::Map(const char * path)
 	}
 
 	//sert à init le buffer
-	ReadConsoleOutput(GameManager::instance.handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
+	ReadConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
 	LoadMap(path);
 	player = new Player(2, 2, 10, 2, '@', tiles, TileType::PLAYER);
@@ -53,7 +53,7 @@ void Map::Draw()
 
 	UpdateBuffer();
 
-	WriteConsoleOutput(GameManager::instance.handleOutput, (CHAR_INFO *)buffer, dwBufferSize,
+	WriteConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO *)buffer, dwBufferSize,
 		dwBufferCoord, &rcRegion);
 }
 

@@ -2,26 +2,30 @@
 
 #include <Windows.h>
 #include "Constants.h"
-#include "InputHandler.h"
 #include "Map.h"
 
 class GameManager
 {
-public:
+private:
 	GameManager();
+	
+	static GameManager *instance;
+
+public:
+
 	~GameManager();
 
 	HANDLE handleOutput;
 	HANDLE handleInput;
-
-	InputHandler input;
 
 	Map* m;
 	Tile *ground;
 
 	bool isGameRunning;
 
-	static GameManager instance;
+	static GameManager& GetInstance();
 
 	void LoadMap(const char *path);
+
+	DWORD getInput(INPUT_RECORD **eventBuffer);
 };
