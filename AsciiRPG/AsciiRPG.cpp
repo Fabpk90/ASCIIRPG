@@ -9,16 +9,22 @@
 #include "Constants.h"
 #include "Map.h"
 #include "GameManager.h"
+#include "Dungeon.h"
 
 int main()
 {
 	
 	Map m("map.txt");
-	while (true)
-	{
+	Dungeon d(1);
+	/*int i = 0;
+	/*while (i < 1)
+	{*/
 		m.Draw();
 		m.player->HandleInput();
-	}
+		d.GenAlea();
+
+		getchar();
+	//}
 	
 
     return 0;
