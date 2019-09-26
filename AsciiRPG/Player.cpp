@@ -7,7 +7,13 @@
 
 Player::Player(int x, int y, Direction dir, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type)
 	: Actor(x, y, dir, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles, type)
-{}
+{
+	isUntouchable = false;
+	untouchableFramePassed = 0;
+
+	colorNormal = colorMask;
+	colorHit = FOREGROUND_RED;
+}
 
 
 Player::~Player()
@@ -90,7 +96,29 @@ void Player::Die()
 
 void Player::Update()
 {
+	if (isUntouchable)
+	{
+		if (++untouchableFramePassed % untouchableFrames == 0)
+		{
+			isUntouchable = false;
+			colorMask = colorNormal;
+		}
+			
+	}
+
 	HandleInput();
+}
+
+void Player::TakeDamage(int damage)
+{
+	if (!isUntouchable)
+	{
+		Actor::TakeDamage(damage);
+		isUntouchable = true;
+		colorMask = colorHit;
+
+		untouchableFramePassed = 0;
+	}
 }
 
 void Player::Shoot()
@@ -106,6 +134,4 @@ void Player::Shoot()
 			GameManager::GetInstance().m->AddEntity(new Projectile(position.first, position.second, 2, '*', dir, tiles, type));
 		}
 	}
-
-	
 }

@@ -6,10 +6,8 @@
 
 
 Projectile::Projectile(int x, int y, int damage, char character, Direction dir, std::vector<Tile*>& tiles, TileType shooterTileType)
-	: Entity(x, y, dir, tiles, character, FOREGROUND_RED, TileType::PROJECTILE), shooterTileType(shooterTileType), damage(damage)
+	: Entity(x, y, dir, tiles, character, FOREGROUND_RED | FOREGROUND_GREEN, TileType::PROJECTILE), shooterTileType(shooterTileType), damage(damage)
 {
-	framePassed = 0;
-
 	CheckTileForCollision(x, y);
 }
 
@@ -26,11 +24,7 @@ void Projectile::Die()
 
 void Projectile::Update()
 {
-	if ((++framePassed % tickPerSecond) == 0)
-	{
-		framePassed = 0;
-		CheckForCollision();
-	}
+	CheckForCollision();
 }
 
 void Projectile::CheckForCollision()
