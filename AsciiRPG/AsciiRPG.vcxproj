@@ -146,10 +146,12 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Dungeon.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NYTimer.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Tile.h" />
@@ -159,9 +161,11 @@
     <ClCompile Include="AsciiRPG.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Dungeon.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>

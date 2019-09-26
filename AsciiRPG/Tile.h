@@ -7,7 +7,8 @@ enum TileType
 	ENV = 0,
 	TILE,
 	ENEMY,
-	PLAYER
+	PLAYER,
+	PROJECTILE
 };
 
 class Tile

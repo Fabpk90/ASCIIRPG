@@ -2,15 +2,12 @@
 
 #include "GameManager.h"
 #include "Enemy.h"
+#include "Projectile.h"
 #include <iostream>
 
-Player::Player(int x, int y, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type)
-	: Actor(x, y, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles, type)
-{
-	dir = Direction::DOWN;
-	x = 2;
-	y = 3;
-}
+Player::Player(int x, int y, Direction dir, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type)
+	: Actor(x, y, dir, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles, type)
+{}
 
 
 Player::~Player()
@@ -68,45 +65,21 @@ void Player::HandleInput()
 					break;
 					
 				case VK_RETURN:
-					std::pair<int, int> pos = GetPositionFromDirection();
-					AttackAt(pos.first, pos.second);
+					{
+						std::pair<int, int> pos = GetPositionFromDirection();
+						AttackAt(pos.first, pos.second);
+					}
+					break;
+
+				case VK_CONTROL:
+					Shoot();
+					break;
 				}
 			}
 		}
 
 		delete inputBuffer;
 	}
-}
-
-std::pair<int, int> Player::GetPositionFromDirection()
-{
-	std::pair<int, int> position;
-	switch (dir)
-	{
-	case UP:
-		position.first = x;
-		position.second = y - 1;
-		break;
-
-	case RIGHT:
-		position.first = x + 1;
-		position.second = y;
-		break;
-
-	case DOWN:
-		position.first = x;
-		position.second = y + 1;
-		break;
-
-	case LEFT:
-		position.first = x - 1;
-		position.second = y;
-		break;
-	default:
-		break;
-	}
-
-	return position;
 }
 
 void Player::Die()
@@ -117,4 +90,21 @@ void Player::Die()
 void Player::Update()
 {
 	HandleInput();
+}
+
+void Player::Shoot()
+{
+	std::pair<int, int> position = GetPositionFromDirection();
+
+	if (position.first > 0 && position.first < SCREEN_WIDTH
+		&& position.second > 0 && position.second < SCREEN_HEIGHT)
+	{
+		//TODO: TEST !!!
+		if (!tiles[position.first * SCREEN_HEIGHT + position.second]->isObstacle())
+		{
+			GameManager::GetInstance().m->AddEntity(new Projectile(position.first, position.second, 2, '*', dir, tiles, type));
+		}
+	}
+
+	
 }

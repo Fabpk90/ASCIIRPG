@@ -12,7 +12,7 @@ private:
 	const int frameBeforeTick = 120;
 
 public:
-	Enemy(int x, int y, int health, int damage, char c, WORD colorMask, std::vector<Tile*>& tiles);
+	Enemy(int x, int y, Direction dir, int health, int damage, char c, WORD colorMask, std::vector<Tile*>& tiles);
 	~Enemy();
 
 	// Hérité via Actor
