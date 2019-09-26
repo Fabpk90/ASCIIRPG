@@ -54,7 +54,8 @@ void Map::Draw()
 {
 	for (Entity* a : entities)
 	{
-		a->Update();
+		if (a->GetIsActive())
+			a->Update();
 	}
 
 	//checks each frame if actors are to be deleted

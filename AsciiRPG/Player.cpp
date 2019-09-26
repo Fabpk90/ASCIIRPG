@@ -84,6 +84,7 @@ void Player::HandleInput()
 
 void Player::Die()
 {
+	isActive = false;
 	GameManager::GetInstance().isGameRunning = false;
 }
 

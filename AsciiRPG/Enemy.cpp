@@ -21,6 +21,7 @@ Enemy::~Enemy()
 
 void Enemy::Die()
 {
+	isActive = false;
 	tiles[y * SCREEN_HEIGHT + x] = GameManager::GetInstance().ground;
 	GameManager::GetInstance().m->EntityDies(this);
 }
