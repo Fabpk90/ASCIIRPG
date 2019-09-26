@@ -11,7 +11,7 @@ private:
 
 	static int random(int n);
 	static bool intersect(int x1, int y1, int x2, int y2);
-	static void drawRectangle(int x, int y, int size);
+	static void createRectangle(int x, int y, int size, int wall_to_break);
 	static int selectAlmostRandomWall(int x, int y, int size);
 
 public:
