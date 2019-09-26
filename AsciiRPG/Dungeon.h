@@ -10,9 +10,10 @@ private:
 	//Tile & getTiles();
 
 	static int random(int n);
-	static bool intersect(int x1, int y1, int x2, int y2);
+	static bool intersect(int x, int y, int size);
+	void getCoordinates(int tile_number, int * x, int * y);
 	static void createRectangle(int x, int y, int size, int wall_to_break);
-	static int selectAlmostRandomWall(int x, int y, int size);
+	static std::pair<int, int> selectAlmostRandomWall(int x, int y, int size);
 
 public:
 

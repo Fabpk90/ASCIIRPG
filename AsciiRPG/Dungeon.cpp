@@ -16,8 +16,19 @@ int Dungeon::random(int n){
 
 
 /* A modifier */
-bool Dungeon::intersect(int x1, int y1, int x2, int y2) {
-	return (x1 <= x2 && x2 >= x1 && y1 <= y2 && y2 >= y1);
+bool Dungeon::intersect(int x, int y, int size) {
+	for (int i = y; i < size - 1; i++) {
+		for (int j = x; j < size - 1; j++) {
+			if ((*tiles)[i * SCREEN_HEIGHT + j]->character == 'X') {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void Dungeon::getCoordinates(int tile_number, int *x, int *y) {
+	
 }
 
 
@@ -42,9 +53,26 @@ void Dungeon::createRectangle(int x, int y, int size, int wall_to_break) {
 	}
 }
 
+std::pair<int, int> Dungeon::selectAlmostRandomWall(int x, int y, int size) {
+	std::vector<std::pair<int, int>> tab_selectable_walls;
+	int random_index = -1;
+
+	for (int i = x + 1; i < x + size - 1; i++) {
+		tab_selectable_walls.push_back(std::pair<int, int>(i, y));
+		tab_selectable_walls.push_back(std::pair<int, int>(i, y + size - 1));
+	}
+
+	for (int j = y + 1; j < y + size - 1; j++) {
+		tab_selectable_walls.push_back(std::pair<int, int>(x, j));
+		tab_selectable_walls.push_back(std::pair<int, int>(x + size - 1, j));
+	}
+
+	random_index = random(tab_selectable_walls.size());
+	return tab_selectable_walls[random_index];
+}
 
 /* If rectangle, add a size parameter */
-int Dungeon::selectAlmostRandomWall(int x, int y, int size) {
+/*int Dungeon::selectAlmostRandomWall(int x, int y, int size) {
 	std::vector<int> tab_selectable_walls;
 	int random_index = -1;
 
@@ -60,7 +88,7 @@ int Dungeon::selectAlmostRandomWall(int x, int y, int size) {
 
 	random_index = random(tab_selectable_walls.size());
 	return tab_selectable_walls[random_index];
-}
+}*/
 
 
 std::vector<Tile *>* Dungeon::GenAlea(int nb_room) {
@@ -90,7 +118,7 @@ std::vector<Tile *>* Dungeon::GenAlea(int nb_room) {
 	random_coord_x = random(SCREEN_HEIGHT);
 	random_coord_y = random(SCREEN_WIDTH);
 
-	random_size = random(5);
+	random_size = random(13);
 
 	/*Impossible to walk in a smaller room*/
 	if (random_size < 4) {
@@ -106,23 +134,30 @@ std::vector<Tile *>* Dungeon::GenAlea(int nb_room) {
 	//createRectangle(random_coord_x, random_coord_y, random_size);
 	//while (i <= nb_room) {
 		/* getting random wall coord from the current room */
-		wall_break = selectAlmostRandomWall(random_coord_x, random_coord_y, random_size);
+		
+	std::pair<int, int> positionWall = selectAlmostRandomWall(random_coord_x, random_coord_y, random_size);
+	
+	//wall_break = selectAlmostRandomWall(random_coord_x, random_coord_y, random_size);
 
 		/* Creating the room */
-		createRectangle(random_coord_x, random_coord_y, random_size, wall_break);
+		createRectangle(random_coord_x, random_coord_y, random_size, positionWall.second * SCREEN_HEIGHT + positionWall.first);
 
 		/*getting random size */
-		//random_size = random(13);
+		random_size = random(13);
 
 		/*Impossible to walk in a smaller room*/
-		/*if (random_size < 4) {
+		if (random_size < 4) {
 			random_size = 4;
-		}*/
+		}
 
 		/* check collision */
-		/*if (!intersect()) {
-			drawRectangle(random_coord_x, random_coord_y, random_size);
-		}*/
+		if (!intersect(random_coord_x, random_coord_y, random_size)) {
+			//wall_break = selectAlmostRandomWall(random_coord_x, random_coord_y, random_size);
+			positionWall = selectAlmostRandomWall(random_coord_x, random_coord_y, random_size);
+			createRectangle(random_coord_x, random_coord_y, random_size, positionWall.second * SCREEN_HEIGHT + positionWall.first);
+
+			// TODO Ecrire fonction d'intersection avec la paire de coordonnées
+		}
 	//}
 
 		return tiles;
