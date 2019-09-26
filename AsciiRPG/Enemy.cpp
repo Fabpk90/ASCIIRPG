@@ -40,6 +40,10 @@ void Enemy::Update()
 
 void Enemy::FollowTarget()
 {
+	//HAX
+	tiles[y * SCREEN_HEIGHT + x] = this;
+	//HAX
+	
 	Actor& actor = GameManager::GetInstance().m->GetPlayer();
 
 	//trying to reach the player
@@ -87,6 +91,7 @@ void Enemy::FollowTarget()
 					p->Die();
 				}
 				
+				ChangePosition(moveX, moveY);
 			}
 		}
 	}

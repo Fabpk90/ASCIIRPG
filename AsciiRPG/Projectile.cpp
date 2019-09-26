@@ -6,9 +6,11 @@
 
 
 Projectile::Projectile(int x, int y, int damage, char character, Direction dir, std::vector<Tile*>& tiles, TileType shooterTileType)
-	: Entity(x, y, dir, tiles, character, FOREGROUND_RED, TileType::ENV), shooterTileType(shooterTileType), damage(damage)
+	: Entity(x, y, dir, tiles, character, FOREGROUND_RED, TileType::PROJECTILE), shooterTileType(shooterTileType), damage(damage)
 {
 	framePassed = 0;
+
+	CheckTileForCollision(x, y);
 }
 
 Projectile::~Projectile()
@@ -17,6 +19,8 @@ Projectile::~Projectile()
 
 void Projectile::Die()
 {
+	isActive = false;
+	tiles[y * SCREEN_HEIGHT + x] = GameManager::GetInstance().ground;
 	GameManager::GetInstance().m->EntityDies(this);
 }
 
@@ -38,22 +42,28 @@ void Projectile::CheckForCollision()
 
 	if (blockType == OBSTACLE)
 	{
-		TileType type = tiles[position.second * SCREEN_HEIGHT + position.first]->type;
-
-		if (type == TILE)
-			Die();
-		else if (type == ENEMY || type == PLAYER)
-		{
-			if (type != shooterTileType)
-			{
-				Actor* a = static_cast<Actor*>(tiles[position.second * SCREEN_HEIGHT + position.first]);
-				a->TakeDamage(damage);
-				Die();
-			}
-			else //we don't hurt our creator
-				Die();
-		}
+		CheckTileForCollision(position.first, position.second);
 	}
 	else if (blockType == OUT_OF_BOUND)
 		Die();
+}
+
+void Projectile::CheckTileForCollision(int x, int y)
+{
+	TileType type = tiles[y * SCREEN_HEIGHT + x]->type;
+
+	if (type == TILE)
+		Die();
+	else if (type == ENEMY || type == PLAYER)
+	{
+		if (type != shooterTileType)
+		{
+			Actor* a = static_cast<Actor*>(tiles[y * SCREEN_HEIGHT + x]);
+			a->TakeDamage(damage);
+
+			Die();
+		}
+		else //we don't hurt our creator
+			Die();
+	}
 }

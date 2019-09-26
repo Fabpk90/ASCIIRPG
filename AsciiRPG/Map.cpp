@@ -58,6 +58,17 @@ void Map::Draw()
 			a->Update();
 	}
 
+	//checks each frame if actors are to be added
+	if (entitiesToAdd.size())
+	{
+		for (Entity* ent : entitiesToAdd)
+		{
+			entities.push_back(ent);
+		}
+		entitiesToAdd.clear();
+	}
+
+
 	//checks each frame if actors are to be deleted
 	if (entitiesToDestroy.size())
 	{
@@ -84,15 +95,7 @@ void Map::Draw()
 		entitiesToDestroy.clear();
 	}
 
-	//checks each frame if actors are to be added
-	if (entitiesToAdd.size())
-	{
-		for (Entity* ent : entitiesToAdd)
-		{
-			entities.push_back(ent);
-		}
-		entitiesToAdd.clear();
-	}
+	
 	
 	UpdateBuffer();
 

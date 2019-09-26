@@ -4,6 +4,8 @@
 #include "Constants.h"
 #include "Map.h"
 
+#include "NYTimer.h"
+
 class GameManager
 {
 private:
