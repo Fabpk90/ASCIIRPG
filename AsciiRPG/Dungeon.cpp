@@ -10,51 +10,38 @@
 
 std::vector<Tile *>* Dungeon::tiles = nullptr;
 
-
-/*Dungeon::Dungeon(int nb_room)
-{
-}
-
-Dungeon::~Dungeon()
-{
-	delete[] tiles;
-}*/
-
-/*Tile & Dungeon::getTiles()
-{
-	return *tiles;
-}*/
-
 int Dungeon::random(int n){
 	return rand() % n;
 }
+
 
 /* A modifier */
 bool Dungeon::intersect(int x1, int y1, int x2, int y2) {
 	return (x1 <= x2 && x2 >= x1 && y1 <= y2 && y2 >= y1);
 }
 
+
 void Dungeon::createRectangle(int x, int y, int size, int wall_to_break) {
 	for (int i = y; i < y + size; i++) {
 		for (int j = x; j < x + size; j++) {
 			/*Create an empty room*/
 			if (j == x || j == x + size - 1 || i == y || i == y + size - 1) {
-				
 				(*tiles)[i * SCREEN_HEIGHT + j]->character = 'X';
 				(*tiles)[i * SCREEN_HEIGHT + j]->colorMask = FOREGROUND_RED;
 			}
+
 			else {
-				(*tiles)[y * SCREEN_HEIGHT + x]->character = ' ';
+				(*tiles)[i * SCREEN_HEIGHT + j]->character = ' ';
 			}
 
-			if ((i* SCREEN_HEIGHT + j) == wall_to_break) {
-				(*tiles)[y * SCREEN_HEIGHT + x]->character = ' ';
+			/* Creating the door to the next room */
+			if (i * SCREEN_HEIGHT + j == wall_to_break) {
+				(*tiles)[i * SCREEN_HEIGHT + j]->character = ' ';
 			}
-			
-			
 		}
 	}
 }
+
 
 /* If rectangle, add a size parameter */
 int Dungeon::selectAlmostRandomWall(int x, int y, int size) {
@@ -73,7 +60,6 @@ int Dungeon::selectAlmostRandomWall(int x, int y, int size) {
 
 	random_index = random(tab_selectable_walls.size());
 	return tab_selectable_walls[random_index];
-	
 }
 
 
@@ -88,9 +74,8 @@ std::vector<Tile *>* Dungeon::GenAlea(int nb_room) {
 		}
 	}
 
+	/*Initializing random generation*/
 	srand(time(NULL));
-
-	/*Initializing variables for the random generation*/
 
 	int random_size = 12;
 	int random_coord_x = 0;
@@ -105,7 +90,7 @@ std::vector<Tile *>* Dungeon::GenAlea(int nb_room) {
 	random_coord_x = random(SCREEN_HEIGHT);
 	random_coord_y = random(SCREEN_WIDTH);
 
-	random_size = random(13);
+	random_size = random(5);
 
 	/*Impossible to walk in a smaller room*/
 	if (random_size < 4) {
@@ -123,14 +108,9 @@ std::vector<Tile *>* Dungeon::GenAlea(int nb_room) {
 		/* getting random wall coord from the current room */
 		wall_break = selectAlmostRandomWall(random_coord_x, random_coord_y, random_size);
 
-		/*Changing tiles to make a X become ' ' */
-		//(*tiles)[wall_break]->character = ' ';
-
 		/* Creating the room */
 		createRectangle(random_coord_x, random_coord_y, random_size, wall_break);
 
-
-		//drawRectangle(random_coord_x, random_coord_y, random_size);
 		/*getting random size */
 		//random_size = random(13);
 
