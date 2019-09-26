@@ -2,7 +2,7 @@
 
 #include "Actor.h"
 
-const int frameBeforeTick = 30;
+const int frameBeforeTick = 8;
 
 class Enemy : public Actor
 {

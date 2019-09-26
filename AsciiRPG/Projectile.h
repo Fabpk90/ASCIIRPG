@@ -2,11 +2,13 @@
 
 #include "Entity.h"
 
+const int tickPerSecond = 5;
+
 class Projectile : public Entity
 {
 private:
 
-	const int tickPerSecond = 2 * 60;
+	
 
 	int framePassed;
 
