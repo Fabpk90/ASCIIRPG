@@ -28,14 +28,11 @@ void Enemy::Die()
 
 void Enemy::Update()
 {
-	//TODO: AI !
-
 	if ((++framePassed % frameBeforeTick) == 0)
 	{
 		FollowTarget();
 		framePassed = 0;
 	}
-
 }
 
 void Enemy::FollowTarget()
@@ -63,13 +60,14 @@ void Enemy::FollowTarget()
 	else if (targetY < y)
 		moveY -= 1;
 
+	//diagonal movemment are not allowed
 	if (moveX != x && moveY != y)
 		moveY = y;
 	
 	if (tiles[moveY * SCREEN_HEIGHT + moveX]->type == TileType::PLAYER)
 	{
 		Actor* a = static_cast<Actor*>(tiles[moveY * SCREEN_HEIGHT + moveX]);
-		//a->TakeDamage(damage);
+		a->TakeDamage(damage);
 	}
 	else //we can't hit the player, so we try to move
 	{

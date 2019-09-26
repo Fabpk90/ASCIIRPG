@@ -24,11 +24,11 @@ Map::Map(const char * path)
 
 	LoadMap(path);
 	player = new Player(2, 2, DOWN, 30, 2, '@', tiles, TileType::PLAYER);
-	enemy = new Enemy(3, 3, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
+	enemy = new Enemy(5, 5, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
 
 	entities.push_back(player);
 	entities.push_back(enemy);
-	entities.push_back(new Enemy(5, 5, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles));
+	entities.push_back(new Enemy(6, 6, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles));
 
 	tiles[player->GetX() * SCREEN_HEIGHT + player->GetY()] = player;
 	tiles[enemy->GetX() * SCREEN_HEIGHT + enemy->GetY()] = enemy;
