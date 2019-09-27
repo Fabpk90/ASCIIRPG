@@ -34,6 +34,9 @@ public:
 	int GetX() { return x; }
 	int GetY() { return y; }
 
+	Direction GetDirection() { return dir; }
+	std::vector<Tile*>& GetTiles() { return tiles; }
+
 	bool GetIsActive() { return isActive; }
 
 	virtual void Die() = 0;

@@ -9,15 +9,18 @@ Player::Player(int x, int y, Direction dir, int health, int damage, char c, std:
 	: Actor(x, y, dir, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles, type)
 {
 	isUntouchable = false;
-	untouchableFramePassed = 0;
 
 	colorNormal = colorMask;
 	colorHit = FOREGROUND_RED;
+
+	weapon = new Weapon(*this, 0.25f);
+	timer = new NYTimer();
 }
 
 
 Player::~Player()
 {
+	delete weapon;
 }
 
 void Player::HandleInput()
@@ -98,7 +101,7 @@ void Player::Update()
 {
 	if (isUntouchable)
 	{
-		if (++untouchableFramePassed % untouchableFrames == 0)
+		if(timer->getElapsedSeconds() >= untouchableTime)
 		{
 			isUntouchable = false;
 			colorMask = colorNormal;
@@ -116,22 +119,11 @@ void Player::TakeDamage(int damage)
 		Actor::TakeDamage(damage);
 		isUntouchable = true;
 		colorMask = colorHit;
-
-		untouchableFramePassed = 0;
+		timer->start();
 	}
 }
 
 void Player::Shoot()
 {
-	std::pair<int, int> position = GetPositionFromDirection();
-
-	if (position.first > 0 && position.first < SCREEN_WIDTH
-		&& position.second > 0 && position.second < SCREEN_HEIGHT)
-	{
-		//TODO: TEST !!!
-		if (!tiles[position.first * SCREEN_HEIGHT + position.second]->isObstacle())
-		{
-			GameManager::GetInstance().m->AddEntity(new Projectile(position.first, position.second, 2, '*', dir, tiles, type));
-		}
-	}
+	weapon->Use();
 }

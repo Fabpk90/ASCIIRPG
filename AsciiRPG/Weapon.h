@@ -1,18 +1,21 @@
 #pragma once
 
 #include "Entity.h"
+#include "NYTimer.h"
 
 
 class Weapon
 {
 private:
-	unsigned int timeSinceLastUse;
-	unsigned int cooldown;
+	float cooldownSeconds;
+
+	NYTimer* timer;
+	Entity& user;
+
 public:
-	Weapon(int cooldown);
+	Weapon(Entity& user, float cooldownSeconds);
 
-
-	void Use(Entity& user);
+	void Use();
 
 	~Weapon();
 };

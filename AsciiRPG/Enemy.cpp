@@ -12,6 +12,8 @@ Enemy::Enemy(int x, int y, Direction dir, int health, int damage, char c, WORD c
 {
 	framePassed = 0;
 	dir = DOWN;
+
+	weapon = new Weapon(*this, 1.5f);
 }
 
 
@@ -28,6 +30,10 @@ void Enemy::Die()
 
 void Enemy::Update()
 {
+	//HAX
+	tiles[y * SCREEN_HEIGHT + x] = this;
+	//HAX
+
 	if ((++framePassed % frameBeforeTick) == 0)
 	{
 		FollowTarget();
@@ -37,10 +43,6 @@ void Enemy::Update()
 
 void Enemy::FollowTarget()
 {
-	//HAX
-	tiles[y * SCREEN_HEIGHT + x] = this;
-	//HAX
-	
 	Actor& actor = GameManager::GetInstance().m->GetPlayer();
 
 	//trying to reach the player

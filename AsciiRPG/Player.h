@@ -5,16 +5,21 @@
 #include "Actor.h"
 #include <utility>
 
-const int untouchableFrames = 75;
+#include "Weapon.h"
+#include "NYTimer.h"
+
+const float untouchableTime = 1.5f;
 
 class Player : public Actor
 {
 private:
 	bool isUntouchable;
-	int untouchableFramePassed;
 
 	WORD colorHit;
 	WORD colorNormal;
+
+	Weapon *weapon;
+	NYTimer* timer;
 
 public:
 	Player(int x, int y, Direction dir, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type);
