@@ -19,6 +19,7 @@ public:
 	// Hérité via Actor
 	virtual void Die() override;
 	virtual void Update() override;
+	PositionBlocked ChangePosition(int x, int y) override;
 
 	void FollowTarget();
 

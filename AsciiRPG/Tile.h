@@ -9,7 +9,9 @@ enum TileType
 	TILE,
 	ENEMY,
 	PLAYER,
-	PROJECTILE
+	PROJECTILE,
+	DOOR,
+	EXIT
 };
 
 class Tile

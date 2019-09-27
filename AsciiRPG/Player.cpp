@@ -105,6 +105,11 @@ PositionBlocked Player::ChangePosition(int x, int y)
 {
 	PositionBlocked p = Entity::ChangePosition(x, y);
 
+	if (tiles[y * SCREEN_HEIGHT + x]->type == EXIT)
+	{
+		GameManager::GetInstance().Win();
+	}
+
 	/*switch (dir)
 	{
 	case UP:

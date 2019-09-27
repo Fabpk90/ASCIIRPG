@@ -42,6 +42,16 @@ void Enemy::Update()
 	}
 }
 
+PositionBlocked Enemy::ChangePosition(int x, int y)
+{
+	if (tiles[y * SCREEN_HEIGHT + x]->type != DOOR)
+	{
+		return ChangePosition(x, y);
+	}
+
+	return OBSTACLE;
+}
+
 void Enemy::FollowTarget()
 {
 	Actor& actor = GameManager::GetInstance().m->GetPlayer();

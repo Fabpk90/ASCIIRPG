@@ -28,6 +28,7 @@ public:
 	static GameManager& GetInstance();
 
 	void LoadMap(const char *path);
+	void Win();
 
 	DWORD getInput(INPUT_RECORD **eventBuffer);
 };

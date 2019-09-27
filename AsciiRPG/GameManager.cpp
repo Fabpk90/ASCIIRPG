@@ -38,6 +38,12 @@ void GameManager::LoadMap(const char * path)
 	m = new Map(path);
 }
 
+void GameManager::Win()
+{
+	//TODO: add a better ending
+	isGameRunning = false;
+}
+
 DWORD GameManager::getInput(INPUT_RECORD ** eventBuffer)
 {
 	/* Variable for holding the number of current events, and a point to it */
