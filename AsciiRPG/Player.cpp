@@ -40,33 +40,21 @@ void Player::HandleInput()
 				{
 				case VK_LEFT:
 					if (x - 1 >= 0)
-					{
 						ChangePosition(x - 1, y);
-						dir = LEFT;
-					}
 							
 					break;
 				case VK_RIGHT:
 					if (x + 1 < SCREEN_WIDTH)
-					{
-						dir = RIGHT;
 						ChangePosition(x + 1, y);
-					}
 					break;
 
 				case VK_UP:
 					if (y - 1 >= 0)
-					{
 						ChangePosition(x, y - 1);
-						dir = UP;
-					}
 					break;
 				case VK_DOWN:
 					if (y + 1 < SCREEN_HEIGHT)
-					{
 						ChangePosition(x, y + 1);
-						dir = DOWN;
-					}
 					break;
 
 				case VK_ESCAPE:

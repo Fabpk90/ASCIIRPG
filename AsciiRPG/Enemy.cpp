@@ -19,6 +19,7 @@ Enemy::Enemy(int x, int y, Direction dir, int health, int damage, char c, WORD c
 
 Enemy::~Enemy()
 {
+	delete weapon;
 }
 
 void Enemy::Die()
@@ -93,6 +94,10 @@ void Enemy::FollowTarget()
 				
 				ChangePosition(moveX, moveY);
 			}
+		}
+		else //maybe we can shoot at the player
+		{
+			weapon->Use();
 		}
 	}
 }

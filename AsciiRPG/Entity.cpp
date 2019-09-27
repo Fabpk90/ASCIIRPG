@@ -24,6 +24,19 @@ PositionBlocked Entity::ChangePosition(int x, int y)
 
 		tiles[y * SCREEN_HEIGHT + x] = this;
 
+		//updating the direction
+		int diffY = this->y - y;
+		int diffX = this->x - x;
+
+		if (diffY > 0)
+			dir = UP;
+		else if (diffY < 0)
+			dir = DOWN;
+		else if (diffX > 0)
+			dir = LEFT;
+		else if (diffX < 0)
+			dir = RIGHT;
+
 		this->y = y;
 		this->x = x;
 
