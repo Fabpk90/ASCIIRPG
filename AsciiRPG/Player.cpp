@@ -2,19 +2,25 @@
 
 #include "GameManager.h"
 #include "Enemy.h"
+#include "Projectile.h"
 #include <iostream>
 
-Player::Player(int x, int y, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type)
-	: Actor(x, y, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles, type)
+Player::Player(int x, int y, Direction dir, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type)
+	: Actor(x, y, dir, health, damage, c, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED, tiles, type)
 {
-	dir = Direction::DOWN;
-	x = 2;
-	y = 3;
+	isUntouchable = false;
+
+	colorNormal = colorMask;
+	colorHit = FOREGROUND_RED;
+
+	weapon = new Weapon(*this, 0.25f);
+	timer = new NYTimer();
 }
 
 
 Player::~Player()
 {
+	delete weapon;
 }
 
 void Player::HandleInput()
@@ -34,33 +40,21 @@ void Player::HandleInput()
 				{
 				case VK_LEFT:
 					if (x - 1 >= 0)
-					{
 						ChangePosition(x - 1, y);
-						dir = LEFT;
-					}
 							
 					break;
 				case VK_RIGHT:
 					if (x + 1 < SCREEN_WIDTH)
-					{
-						dir = RIGHT;
 						ChangePosition(x + 1, y);
-					}
 					break;
 
 				case VK_UP:
 					if (y - 1 >= 0)
-					{
 						ChangePosition(x, y - 1);
-						dir = UP;
-					}
 					break;
 				case VK_DOWN:
 					if (y + 1 < SCREEN_HEIGHT)
-					{
 						ChangePosition(x, y + 1);
-						dir = DOWN;
-					}
 					break;
 
 				case VK_ESCAPE:
@@ -68,9 +62,17 @@ void Player::HandleInput()
 					break;
 					
 				case VK_RETURN:
-					std::pair<int, int> pos = GetPositionFromDirection();
-					AttackAt(pos.first, pos.second);
+					{
+						std::pair<int, int> pos = GetPositionFromDirection();
+						AttackAt(pos.first, pos.second);
+					}
+					break;
+
+				case VK_CONTROL:
+					Shoot();
+					break;
 				}
+				break;
 			}
 		}
 
@@ -78,43 +80,69 @@ void Player::HandleInput()
 	}
 }
 
-std::pair<int, int> Player::GetPositionFromDirection()
-{
-	std::pair<int, int> position;
-	switch (dir)
-	{
-	case UP:
-		position.first = x;
-		position.second = y - 1;
-		break;
-
-	case RIGHT:
-		position.first = x + 1;
-		position.second = y;
-		break;
-
-	case DOWN:
-		position.first = x;
-		position.second = y + 1;
-		break;
-
-	case LEFT:
-		position.first = x - 1;
-		position.second = y;
-		break;
-	default:
-		break;
-	}
-
-	return position;
-}
-
 void Player::Die()
 {
+	isActive = false;
 	GameManager::GetInstance().isGameRunning = false;
 }
 
 void Player::Update()
 {
+	tiles[y * SCREEN_HEIGHT + x] = this;
+
+	if (isUntouchable)
+	{
+		if(timer->getElapsedSeconds() >= untouchableTime)
+		{
+			isUntouchable = false;
+			colorMask = colorNormal;
+		}
+	}
 	HandleInput();
+}
+
+PositionBlocked Player::ChangePosition(int x, int y)
+{
+	PositionBlocked p = Entity::ChangePosition(x, y);
+
+	if (tiles[y * SCREEN_HEIGHT + x]->type == EXIT)
+	{
+		GameManager::GetInstance().Win();
+	}
+
+	/*switch (dir)
+	{
+	case UP:
+		character = 9651;
+		break;
+	case RIGHT:
+		character = 9655;
+		break;
+	case DOWN:
+		character = 9661;
+		break;
+	case LEFT:
+		character = 9665;
+		break;
+	default:
+		break;
+	}*/
+
+	return p;
+}
+
+void Player::TakeDamage(int damage)
+{
+	if (!isUntouchable)
+	{
+		Actor::TakeDamage(damage);
+		isUntouchable = true;
+		colorMask = colorHit;
+		timer->start();
+	}
+}
+
+void Player::Shoot()
+{
+	weapon->Use();
 }

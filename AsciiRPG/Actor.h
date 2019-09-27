@@ -1,41 +1,28 @@
 #pragma once
 
 #include "Tile.h"
+#include "Entity.h"
 #include <vector>
 
-enum Direction
-{
-	UP,
-	RIGHT,
-	DOWN,
-	LEFT
-};
-
-class Actor : public Tile
+class Actor : public Entity
 {
 
 protected:
-	std::vector<Tile*>& tiles;
-	int x;
-	int y;
 	int health;
 	int damage;
-	Direction dir;
+	
 
 public:
-	Actor(int x, int y, int health, int damage, char character, WORD colorMask, std::vector<Tile*>& tiles, TileType type);
+	Actor(int x, int y, Direction dir, int health, int damage, char character, WORD colorMask, std::vector<Tile*>& tiles, TileType type);
 	~Actor();
-
-	int GetX() { return x; }
-	int GetY() { return y; }
-
-	virtual void Die() = 0;
-	virtual void Update() = 0;
 
 	virtual void TakeDamage(int amount);
 
-	bool ChangePosition(int x, int y);
+	
 	bool AttackAt(int x, int y);
+
+	virtual void Die() = 0;
+	virtual void Update() = 0;
 
 	void SetTiles(std::vector<Tile*>& tiles);
 };

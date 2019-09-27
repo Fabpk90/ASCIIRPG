@@ -4,6 +4,8 @@
 #include "Constants.h"
 #include "Map.h"
 
+#include "NYTimer.h"
+
 class GameManager
 {
 private:
@@ -26,6 +28,7 @@ public:
 	static GameManager& GetInstance();
 
 	void LoadMap(const char *path);
+	void Win();
 
 	DWORD getInput(INPUT_RECORD **eventBuffer);
 };

@@ -5,13 +5,24 @@
 #include "Actor.h"
 #include <utility>
 
+#include "Weapon.h"
+#include "NYTimer.h"
+
+const float untouchableTime = 1.5f;
+
 class Player : public Actor
 {
 private:
-	std::pair<int, int> GetPositionFromDirection();
+	bool isUntouchable;
+
+	WORD colorHit;
+	WORD colorNormal;
+
+	Weapon *weapon;
+	NYTimer* timer;
 
 public:
-	Player(int x, int y, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type);
+	Player(int x, int y, Direction dir, int health, int damage, char c, std::vector<Tile*>& tiles, TileType type);
 	~Player();
 
 	void HandleInput();
@@ -19,5 +30,11 @@ public:
 
 	void Die() override;
 	void Update() override;
+
+	PositionBlocked ChangePosition(int x, int y) override;
+
+	void TakeDamage(int damage) override;
+
+	void Shoot();
 };
 

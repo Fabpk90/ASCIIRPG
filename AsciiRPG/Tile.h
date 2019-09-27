@@ -1,25 +1,30 @@
 #pragma once
 
 #include <Windows.h>
+#include <winnt.h>
 
 enum TileType
 {
 	ENV = 0,
+	TILE,
 	ENEMY,
-	PLAYER
+	PLAYER,
+	PROJECTILE,
+	DOOR,
+	EXIT
 };
 
 class Tile
 {
 public:
 	Tile();
-	Tile(char character, WORD colorMask, TileType type);
+	Tile(wchar_t character, WORD colorMask, TileType type);
 	~Tile();
 
-	char character;
+	wchar_t character;
 	WORD colorMask;
 	TileType type;
 
-	virtual bool isObstacle();
+	bool isObstacle();
 };
 

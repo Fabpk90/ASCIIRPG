@@ -23,11 +23,12 @@ Map::Map(const char * path)
 	ReadConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
 	LoadMap(path);
-	player = new Player(2, 2, 10, 2, '@', tiles, TileType::PLAYER);
-	enemy = new Enemy(3, 3, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
+	player = new Player(2, 2, DOWN, 30, 2, '@', tiles, TileType::PLAYER);
+	enemy = new Enemy(5, 5, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
 
-	actors.push_back(player);
-	actors.push_back(enemy);
+	entities.push_back(player);
+	entities.push_back(enemy);
+	entities.push_back(new Enemy(6, 6, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles));
 
 	tiles[player->GetX() * SCREEN_HEIGHT + player->GetY()] = player;
 	tiles[enemy->GetX() * SCREEN_HEIGHT + enemy->GetY()] = enemy;
@@ -42,15 +43,60 @@ Map::~Map()
 	{
 		delete t;
 	}
+	for (Entity* a : entities)
+	{
+		delete a;
+	}
+
 }
 
 void Map::Draw()
 {
-	for (Actor* a : actors)
+	for (Entity* a : entities)
 	{
-		a->Update();
+		if (a->GetIsActive())
+			a->Update();
 	}
 
+	//checks each frame if actors are to be added
+	if (entitiesToAdd.size())
+	{
+		for (Entity* ent : entitiesToAdd)
+		{
+			entities.push_back(ent);
+		}
+		entitiesToAdd.clear();
+	}
+
+
+	//checks each frame if actors are to be deleted
+	if (entitiesToDestroy.size())
+	{
+		for (Entity* index : entitiesToDestroy)
+		{
+			int indexToDelete = -1;
+			//dirty hax to know the indesx of the actor to be deleted
+			for (int i = 0; i < entities.size() && indexToDelete == -1; i++)
+			{
+				if (entities[i] == index)
+					indexToDelete = i;
+			}
+
+			//setting back the ground
+			int x = entities[indexToDelete]->GetX();
+			int y = entities[indexToDelete]->GetY();
+			tiles[y * SCREEN_HEIGHT + x] = GameManager::GetInstance().ground;
+
+			//deleting effectively the entity
+			delete entities[indexToDelete];
+			entities.erase(entities.begin() + indexToDelete);
+		}
+
+		entitiesToDestroy.clear();
+	}
+
+	
+	
 	UpdateBuffer();
 
 	WriteConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO *)buffer, dwBufferSize,
@@ -63,8 +109,16 @@ void Map::UpdateBuffer()
 	{
 		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
-			buffer[i * SCREEN_HEIGHT + j].Char.AsciiChar = tiles[i * SCREEN_HEIGHT + j]->character;
 			buffer[i * SCREEN_HEIGHT + j].Attributes = tiles[i * SCREEN_HEIGHT + j]->colorMask;
+
+			if (tiles[i * SCREEN_HEIGHT + j]->type == PLAYER 
+				|| tiles[i * SCREEN_HEIGHT + j]->type == ENEMY)
+			{
+				buffer[i * SCREEN_HEIGHT + j].Char.UnicodeChar = tiles[i * SCREEN_HEIGHT + j]->character;
+			}
+			else
+				buffer[i * SCREEN_HEIGHT + j].Char.AsciiChar = tiles[i * SCREEN_HEIGHT + j]->character;
+			
 		}
 	}
 }
@@ -111,27 +165,38 @@ WORD Map::GetTileMaskValue(int val)
 	return d;
 }
 
+//called by an actor when he dies
+void Map::EntityDies(Entity * ent)
+{
+	entitiesToDestroy.push_back(ent);
+}
+
+void Map::AddEntity(Entity * ent)
+{
+	entitiesToAdd.push_back(ent);
+}
+
 void Map::LoadMap(const char * path)
 {
 	std::ifstream stream(path);
 
 	if (!stream.fail())
 	{
-		for (Actor* a : actors)
+		//clears all the actors because we are loading another map
+		for (Entity* a : entities)
 		{
 			//TODO: find a better solution
 			if (auto p = dynamic_cast<Player*>(a))
-			{
-
-			}
+			{}
 			else
 			{
 				delete a;
 			}
 		}
 
-		actors.clear();
+		entities.clear();
 
+		//resets the tiles
 		for (int i = 0; i < SCREEN_HEIGHT; i++)
 		{
 			for (int j = 0; j < SCREEN_WIDTH; j++)
@@ -146,6 +211,8 @@ void Map::LoadMap(const char * path)
 		int att = 0;
 		int width = 0;
 		int height = 0;
+
+		//reads line by line the map
 		while (std::getline(stream, str))
 		{
 			width = 0;
