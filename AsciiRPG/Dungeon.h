@@ -6,17 +6,17 @@ class Dungeon
 {
 private:
 	static std::vector<Tile *> *tiles;
-
-	//Tile & getTiles();
-
-	static int random(int n);
-	static bool intersect(int x, int y, int size);
-	void getCoordinates(int tile_number, int * x, int * y);
-	static void createRectangle(int x, int y, int size, int wall_to_break);
-	static std::pair<int, int> selectAlmostRandomWall(int x, int y, int size);
-
+	int center_x;
+	int center_y;
+	
 public:
-
+	Dungeon();
+	~Dungeon();
+	int random(int n);
+	bool intersect(int x, int y, int size);
+	void createRectangle(int x, int y, int size);
+	void creatingRooms(int nb_rooms);
+	void hHallway(int x, int y);
 	static std::vector<Tile *>* GenAlea(int nb_room);
 };
 
