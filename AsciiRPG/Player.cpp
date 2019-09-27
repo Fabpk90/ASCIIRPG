@@ -72,6 +72,7 @@ void Player::HandleInput()
 					Shoot();
 					break;
 				}
+				break;
 			}
 		}
 
@@ -87,6 +88,8 @@ void Player::Die()
 
 void Player::Update()
 {
+	tiles[y * SCREEN_HEIGHT + x] = this;
+
 	if (isUntouchable)
 	{
 		if(timer->getElapsedSeconds() >= untouchableTime)
@@ -94,10 +97,33 @@ void Player::Update()
 			isUntouchable = false;
 			colorMask = colorNormal;
 		}
-			
 	}
-
 	HandleInput();
+}
+
+PositionBlocked Player::ChangePosition(int x, int y)
+{
+	PositionBlocked p = Entity::ChangePosition(x, y);
+
+	/*switch (dir)
+	{
+	case UP:
+		character = 9651;
+		break;
+	case RIGHT:
+		character = 9655;
+		break;
+	case DOWN:
+		character = 9661;
+		break;
+	case LEFT:
+		character = 9665;
+		break;
+	default:
+		break;
+	}*/
+
+	return p;
 }
 
 void Player::TakeDamage(int damage)

@@ -42,7 +42,7 @@ public:
 	virtual void Die() = 0;
 	virtual void Update() = 0;
 
-	PositionBlocked ChangePosition(int x, int y);
+	virtual PositionBlocked ChangePosition(int x, int y);
 	std::pair<int, int> GetPositionFromDirection();
 };
 

@@ -109,8 +109,16 @@ void Map::UpdateBuffer()
 	{
 		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
-			buffer[i * SCREEN_HEIGHT + j].Char.AsciiChar = tiles[i * SCREEN_HEIGHT + j]->character;
 			buffer[i * SCREEN_HEIGHT + j].Attributes = tiles[i * SCREEN_HEIGHT + j]->colorMask;
+
+			if (tiles[i * SCREEN_HEIGHT + j]->type == PLAYER 
+				|| tiles[i * SCREEN_HEIGHT + j]->type == ENEMY)
+			{
+				buffer[i * SCREEN_HEIGHT + j].Char.UnicodeChar = tiles[i * SCREEN_HEIGHT + j]->character;
+			}
+			else
+				buffer[i * SCREEN_HEIGHT + j].Char.AsciiChar = tiles[i * SCREEN_HEIGHT + j]->character;
+			
 		}
 	}
 }

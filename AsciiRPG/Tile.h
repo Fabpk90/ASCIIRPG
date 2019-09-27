@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include <winnt.h>
 
 enum TileType
 {
@@ -15,10 +16,10 @@ class Tile
 {
 public:
 	Tile();
-	Tile(char character, WORD colorMask, TileType type);
+	Tile(wchar_t character, WORD colorMask, TileType type);
 	~Tile();
 
-	char character;
+	wchar_t character;
 	WORD colorMask;
 	TileType type;
 

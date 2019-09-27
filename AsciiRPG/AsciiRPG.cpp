@@ -1,8 +1,12 @@
 // AsciiRPG.cpp : définit le point d'entrée pour l'application console.
 //
 
+#include <io.h>
+#include <fcntl.h>
+
 #include "GameManager.h"
 #include "NYTimer.h"
+
 
 int main()
 {

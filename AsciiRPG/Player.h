@@ -31,6 +31,8 @@ public:
 	void Die() override;
 	void Update() override;
 
+	PositionBlocked ChangePosition(int x, int y) override;
+
 	void TakeDamage(int damage) override;
 
 	void Shoot();
