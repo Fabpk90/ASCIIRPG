@@ -14,6 +14,20 @@ Entity::~Entity()
 
 PositionBlocked Entity::ChangePosition(int x, int y)
 {
+
+	//updating the direction
+	int diffY = this->y - y;
+	int diffX = this->x - x;
+
+	if (diffY > 0)
+		dir = UP;
+	else if (diffY < 0)
+		dir = DOWN;
+	else if (diffX > 0)
+		dir = LEFT;
+	else if (diffX < 0)
+		dir = RIGHT;
+
 	//out of bound
 	if (x < 0 || y < 0 || x >= SCREEN_WIDTH || y >= SCREEN_WIDTH)
 		return OUT_OF_BOUND;
@@ -23,19 +37,6 @@ PositionBlocked Entity::ChangePosition(int x, int y)
 		tiles[this->y * SCREEN_HEIGHT + this->x] = GameManager::GetInstance().ground;
 
 		tiles[y * SCREEN_HEIGHT + x] = this;
-
-		//updating the direction
-		int diffY = this->y - y;
-		int diffX = this->x - x;
-
-		if (diffY > 0)
-			dir = UP;
-		else if (diffY < 0)
-			dir = DOWN;
-		else if (diffX > 0)
-			dir = LEFT;
-		else if (diffX < 0)
-			dir = RIGHT;
 
 		this->y = y;
 		this->x = x;

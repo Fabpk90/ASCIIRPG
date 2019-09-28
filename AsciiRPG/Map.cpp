@@ -226,6 +226,8 @@ void Map::LoadMap(const char * path)
 					tiles[height * SCREEN_HEIGHT + width]->character = str[i];
 					tiles[height * SCREEN_HEIGHT + width]->colorMask = buffer[height * SCREEN_HEIGHT + width].Attributes;
 
+					tiles[height * SCREEN_HEIGHT + width]->type = str[i] != ' ' ? TILE : ENV;
+
 					i++;
 				}
 
