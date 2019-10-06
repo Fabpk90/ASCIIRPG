@@ -24,6 +24,9 @@ public:
 	virtual void Die() = 0;
 	virtual void Update() = 0;
 
+	int GetHealth() { return health; }
+	int GetDamage() { return damage; }
+
 	void SetTiles(std::vector<Tile*>& tiles);
 };
 

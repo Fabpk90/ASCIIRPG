@@ -8,6 +8,7 @@
 #include <vector>
 #include "Entity.h"
 
+#include "HUD.h"
 
 class Map
 {
@@ -27,6 +28,8 @@ private:
 	std::vector<Tile*> tiles;
 	std::vector<Entity* > entitiesToDestroy;
 	std::vector<Entity*> entitiesToAdd;
+
+	HUD* hud;
 
 	void UpdateBuffer();
 

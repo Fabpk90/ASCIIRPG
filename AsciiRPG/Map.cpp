@@ -11,6 +11,7 @@ Map::Map(const char * path)
 {
 	buffer = new CHAR_INFO[SCREEN_HEIGHT * SCREEN_WIDTH];
 	tiles = std::vector<Tile*>(SCREEN_HEIGHT * SCREEN_WIDTH);
+	
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
@@ -27,6 +28,7 @@ Map::Map(const char * path)
 	Dungeon::GenCave(3, tiles);
 	player = new Player(2, 2, DOWN, 30, 2, '@', tiles, TileType::PLAYER);
 	//enemy = new Enemy(5, 5, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
+	hud = new HUD(10, 50, 3, *player);
 
 	entities.push_back(player);
 	//entities.push_back(enemy);
@@ -40,6 +42,7 @@ Map::~Map()
 {
 	delete player;
 	delete[] buffer;
+	delete hud;
 	
 	for (Tile* t : tiles)
 	{
@@ -97,7 +100,7 @@ void Map::Draw()
 		entitiesToDestroy.clear();
 	}
 
-	
+	hud->Draw();
 	
 	UpdateBuffer();
 

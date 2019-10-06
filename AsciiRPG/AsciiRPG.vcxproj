@@ -148,6 +148,7 @@
     <ClInclude Include="Dungeon.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NYTimer.h" />
     <ClInclude Include="Player.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
