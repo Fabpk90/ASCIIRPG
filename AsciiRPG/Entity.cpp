@@ -34,7 +34,7 @@ PositionBlocked Entity::ChangePosition(int x, int y)
 
 	if (!(tiles[y * SCREEN_HEIGHT + x])->isObstacle())
 	{
-		tiles[this->y * SCREEN_HEIGHT + this->x] = GameManager::GetInstance().ground;
+		tiles[this->y * SCREEN_HEIGHT + this->x] = GameManager::GetInstance().groundTile;
 
 		tiles[y * SCREEN_HEIGHT + x] = this;
 

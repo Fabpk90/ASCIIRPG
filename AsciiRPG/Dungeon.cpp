@@ -8,6 +8,8 @@
 
 
 
+
+
 Dungeon::Dungeon(int nb_room)
 {
 	this->nb_room = nb_room;
@@ -119,5 +121,104 @@ void Dungeon::GenAlea() {
 	}*/
 
 	/* Return a Tile matrice*/
+}
+
+void Dungeon::GenRandomWalls(std::vector<char>& tiles)
+{
+	std::srand(time(NULL));
+
+	for (int i = 0; i < SCREEN_HEIGHT; i++)
+	{
+		for (int j = 0; j < SCREEN_WIDTH; j++)
+		{
+			if (std::rand() % 101 <= 65)
+				tiles[i * SCREEN_HEIGHT + j] = 'X';
+			else
+			{
+				tiles[i * SCREEN_HEIGHT + j] = ' ';
+			}
+		}
+	}
+}
+
+void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles)
+{
+	int wallCount;
+	//used to store the matrix when is being modified
+	//so that the algorithm modify generation by generation the map
+
+	std::vector<char> tiles = std::vector<char>(SCREEN_HEIGHT * SCREEN_WIDTH);
+	GenRandomWalls(tiles);
+
+	std::vector<char> tilesBeingModified = tiles;
+
+	char wallCharacter = 'X';
+
+	for (int iter = 0; iter < iterations; iter++)
+	{
+		for (int i = 0; i < SCREEN_HEIGHT; i++)
+		{
+			for (int j = 0; j < SCREEN_WIDTH; j++)
+			{
+				wallCount = 0;
+				if (i - 2 >= 0 && i + 2 <= SCREEN_HEIGHT - 1 && j - 2 >= 0 && j + 2 <= SCREEN_WIDTH - 1) // check for array boundaries
+				{
+					//we count surrounding walls, 8 cells
+					// applying 4-5 rule
+					if (tiles[(i - 1) * SCREEN_HEIGHT + j] == wallCharacter)
+						wallCount++;
+					if (tiles[(i + 1) * SCREEN_HEIGHT + j] == wallCharacter)
+						wallCount++;
+					if (tiles[(i - 2) * SCREEN_HEIGHT + j] == wallCharacter)
+						wallCount++;
+					if (tiles[(i + 2) * SCREEN_HEIGHT + j] == wallCharacter)
+						wallCount++;
+					if (tiles[i * SCREEN_HEIGHT + j + 1] == wallCharacter)
+						wallCount++;
+					if (tiles[i * SCREEN_HEIGHT + j - 1] == wallCharacter)
+						wallCount++;
+					if (tiles[i * SCREEN_HEIGHT + j + 2] == wallCharacter)
+						wallCount++;
+					if (tiles[i * SCREEN_HEIGHT + j - 2] == wallCharacter)
+						wallCount++;
+
+					if (tiles[i * SCREEN_HEIGHT + j] == wallCharacter)
+					{
+						//we check according to the rule
+						if (wallCount >= 5 || wallCount <= 1)
+						{
+							tilesBeingModified[i * SCREEN_HEIGHT + j] = wallCharacter;
+						}
+						else
+						{
+							tilesBeingModified[i * SCREEN_HEIGHT + j] = ' ';
+						}
+					}
+					else if (tiles[i * SCREEN_HEIGHT + j] == wallCharacter)
+					{
+						if (wallCount > 5)
+							tilesBeingModified[i * SCREEN_HEIGHT + j] = wallCharacter;
+					}
+
+
+				} //make the edges walls
+				else if (i == 0 || i + 1 == SCREEN_HEIGHT || j == 0 || j + 1 == SCREEN_WIDTH)
+					tiles[i * SCREEN_HEIGHT + j] = wallCharacter;
+			}
+		}
+
+		tiles = tilesBeingModified;
+	}
+
+	for (int i = 0; i < SCREEN_HEIGHT; i++)
+	{
+		for (int j = 0; j < SCREEN_WIDTH; j++)
+		{
+			if (tiles[i * SCREEN_HEIGHT + j] == wallCharacter)
+				finalTiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().wallTile;
+			else
+				finalTiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().groundTile;
+		}
+	}
 }
 

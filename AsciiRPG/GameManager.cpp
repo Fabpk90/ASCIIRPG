@@ -12,7 +12,8 @@ GameManager::GameManager()
 	isGameRunning = true;
 
 	m = nullptr;
-	ground = new Tile(' ', 0, ENV);
+	groundTile = new Tile(' ', 0, ENV);
+	wallTile = new Tile('X', FOREGROUND_GREEN, TILE);
 }
 
 
@@ -20,7 +21,8 @@ GameManager::~GameManager()
 {
 	delete instance;
 	delete m;
-	delete ground;
+	delete groundTile;
+	delete wallTile;
 }
 
 GameManager & GameManager::GetInstance()

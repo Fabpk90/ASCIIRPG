@@ -21,7 +21,8 @@ public:
 	HANDLE handleInput;
 
 	Map* m;
-	Tile *ground;
+	Tile *groundTile;
+	Tile *wallTile;
 
 	bool isGameRunning;
 

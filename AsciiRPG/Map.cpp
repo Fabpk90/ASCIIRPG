@@ -5,6 +5,7 @@
 
 
 #include "GameManager.h"
+#include "Dungeon.h"
 
 Map::Map(const char * path)
 {
@@ -22,16 +23,17 @@ Map::Map(const char * path)
 	//sert à init le buffer
 	ReadConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
-	LoadMap(path);
+	//LoadMap(path);
+	Dungeon::GenCave(3, tiles);
 	player = new Player(2, 2, DOWN, 30, 2, '@', tiles, TileType::PLAYER);
-	enemy = new Enemy(5, 5, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
+	//enemy = new Enemy(5, 5, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
 
 	entities.push_back(player);
-	entities.push_back(enemy);
-	entities.push_back(new Enemy(6, 6, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles));
+	//entities.push_back(enemy);
+	//entities.push_back(new Enemy(6, 6, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles));
 
 	tiles[player->GetX() * SCREEN_HEIGHT + player->GetY()] = player;
-	tiles[enemy->GetX() * SCREEN_HEIGHT + enemy->GetY()] = enemy;
+//	tiles[enemy->GetX() * SCREEN_HEIGHT + enemy->GetY()] = enemy;
 }
 
 Map::~Map()
@@ -85,7 +87,7 @@ void Map::Draw()
 			//setting back the ground
 			int x = entities[indexToDelete]->GetX();
 			int y = entities[indexToDelete]->GetY();
-			tiles[y * SCREEN_HEIGHT + x] = GameManager::GetInstance().ground;
+			tiles[y * SCREEN_HEIGHT + x] = GameManager::GetInstance().groundTile;
 
 			//deleting effectively the entity
 			delete entities[indexToDelete];
