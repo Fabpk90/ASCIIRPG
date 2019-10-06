@@ -9,7 +9,7 @@ private:
 	Tile* tiles;
 
 	static void GenRandomWalls(std::vector<char> &tiles);
-
+	static void GenWallAround(std::vector<char>& finalTiles);
 public:
 	Dungeon(int nb_room);
 	~Dungeon();
@@ -21,5 +21,6 @@ public:
 
 	//Assumes that the vector passed in has a SCREENX * SCREENY size
 	static void GenCave(int iterations, std::vector<Tile*>& finalTiles);
+	
 };
 

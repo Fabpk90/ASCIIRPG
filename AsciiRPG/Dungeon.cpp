@@ -210,6 +210,8 @@ void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles)
 		tiles = tilesBeingModified;
 	}
 
+	GenWallAround(tiles);
+
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
 		for (int j = 0; j < SCREEN_WIDTH; j++)
@@ -218,6 +220,21 @@ void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles)
 				finalTiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().wallTile;
 			else
 				finalTiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().groundTile;
+		}
+	}
+}
+
+void Dungeon::GenWallAround(std::vector<char>& finalTiles)
+{
+	for (int i = 0; i < SCREEN_HEIGHT; i++)
+	{
+		for (int j = 0; j < SCREEN_WIDTH; j++)
+		{
+			if (i == 0 || i == SCREEN_HEIGHT - 1 
+				|| j == 0 || j == SCREEN_WIDTH - 1)
+			{
+				finalTiles[i * SCREEN_HEIGHT + j] = 'X';
+			}
 		}
 	}
 }
