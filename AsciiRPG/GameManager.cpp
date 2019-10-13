@@ -10,10 +10,13 @@ GameManager::GameManager()
 	handleInput = (HANDLE)GetStdHandle(STD_INPUT_HANDLE);
 
 	isGameRunning = true;
+	level = 0;
+	maxLevel = 3;
 
 	m = nullptr;
 	groundTile = new Tile(' ', 0, ENV);
 	wallTile = new Tile('X', FOREGROUND_GREEN, TILE);
+	exitTile = new Tile('E', FOREGROUND_GREEN | FOREGROUND_RED, EXIT);
 }
 
 
@@ -23,6 +26,7 @@ GameManager::~GameManager()
 	delete m;
 	delete groundTile;
 	delete wallTile;
+	delete exitTile;
 }
 
 GameManager & GameManager::GetInstance()
@@ -44,6 +48,14 @@ void GameManager::Win()
 {
 	//TODO: add a better ending
 	isGameRunning = false;
+}
+
+void GameManager::NextLevel()
+{
+	if (++level == maxLevel)
+		Win();
+	else
+		m->LoadMap();
 }
 
 DWORD GameManager::getInput(INPUT_RECORD ** eventBuffer)

@@ -32,6 +32,8 @@ private:
 	HUD* hud;
 
 	void UpdateBuffer();
+	void ResetMap();
+	
 
 public:
 	Map(const char* path);
@@ -45,8 +47,12 @@ public:
 
 	void EntityDies(Entity* ent);
 	void AddEntity(Entity* ent);
+	
 
 	//Assumes that the size doesn't change
 	void LoadMap(const char *path);
+
+	//Generating a procedural cave
+	void LoadMap();
 };
 

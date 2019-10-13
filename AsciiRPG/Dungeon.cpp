@@ -4,7 +4,7 @@
 #include <vector>
 #include "Constants.h"
 #include "GameManager.h"
-#include <time.h>
+#include <ctime>
 
 
 
@@ -141,7 +141,7 @@ void Dungeon::GenRandomWalls(std::vector<char>& tiles)
 	}
 }
 
-void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles)
+void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles, Player& player)
 {
 	int wallCount;
 	//used to store the matrix when is being modified
@@ -211,6 +211,7 @@ void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles)
 	}
 
 	GenWallAround(tiles);
+	GenExit(tiles);
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
@@ -218,10 +219,14 @@ void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles)
 		{
 			if (tiles[i * SCREEN_HEIGHT + j] == wallCharacter)
 				finalTiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().wallTile;
+			else if (tiles[i * SCREEN_HEIGHT + j] == 'E')
+				finalTiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().exitTile;
 			else
 				finalTiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().groundTile;
 		}
 	}
+
+	GenPlayerPosition(player, tiles);
 }
 
 void Dungeon::GenWallAround(std::vector<char>& finalTiles)
@@ -239,3 +244,56 @@ void Dungeon::GenWallAround(std::vector<char>& finalTiles)
 	}
 }
 
+void Dungeon::GenPlayerPosition(Player& player, std::vector<char>& tiles)
+{
+	//copy pasted in this case
+	//but useful if a different technique is needed for the player position (from the goal's one)
+	
+	int x = 0;
+	int y = 0;
+
+	std::srand(std::time(nullptr));
+
+	do
+	{
+		x = std::rand() % SCREEN_WIDTH;
+		y = std::rand() % SCREEN_HEIGHT;
+	} while (!AreNeighboorsCellsFree(tiles, x, y));
+
+	player.SetPosition(x, y);
+}
+
+void Dungeon::GenExit(std::vector<char>& tiles)
+{
+	int x = 0;
+	int y = 0;
+
+	std::srand(std::time(nullptr));
+
+	do
+	{
+		x = std::rand() % SCREEN_WIDTH;
+		y = std::rand() % SCREEN_HEIGHT;
+	}
+	while (!AreNeighboorsCellsFree(tiles, x, y));
+
+	tiles[y * SCREEN_HEIGHT + x] = 'E';
+}
+
+bool Dungeon::AreNeighboorsCellsFree(std::vector<char>& tiles, int x, int y)
+{
+	//checking the 9 cells
+	
+	if (tiles[y * SCREEN_HEIGHT + x] != ' ') return false;
+	if (tiles[(y - 1) * SCREEN_HEIGHT + x - 1] != ' ') return false;
+	if (tiles[(y - 1) * SCREEN_HEIGHT + x] != ' ') return false;
+	if (tiles[(y - 1) * SCREEN_HEIGHT + x + 1] != ' ') return false;
+	if (tiles[(y) * SCREEN_HEIGHT + x - 1] != ' ') return false;
+	if (tiles[(y) * SCREEN_HEIGHT + x + 1] != ' ') return false;
+	if (tiles[(y + 1) * SCREEN_HEIGHT + x - 1] != ' ') return false;
+	if (tiles[(y + 1) * SCREEN_HEIGHT + x] != ' ') return false;
+	if (tiles[(y + 1) * SCREEN_HEIGHT + x + 1] != ' ') return false;
+	
+
+	return true;
+}

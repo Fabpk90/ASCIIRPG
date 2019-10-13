@@ -107,7 +107,7 @@ PositionBlocked Player::ChangePosition(int x, int y)
 
 	if (tiles[y * SCREEN_HEIGHT + x]->type == EXIT)
 	{
-		GameManager::GetInstance().Win();
+		GameManager::GetInstance().NextLevel();
 	}
 
 	/*switch (dir)
@@ -129,6 +129,16 @@ PositionBlocked Player::ChangePosition(int x, int y)
 	}*/
 
 	return p;
+}
+
+void Player::SetPosition(int x, int y)
+{
+	tiles[this->y * SCREEN_HEIGHT + this->x] = GameManager::GetInstance().groundTile;
+
+	tiles[y * SCREEN_HEIGHT + x] = this;
+
+	this->y = y;
+	this->x = x;
 }
 
 void Player::TakeDamage(int damage)

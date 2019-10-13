@@ -32,6 +32,7 @@ public:
 	void Update() override;
 
 	PositionBlocked ChangePosition(int x, int y) override;
+	void SetPosition(int x, int y);
 
 	void TakeDamage(int damage) override;
 

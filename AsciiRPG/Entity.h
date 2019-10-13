@@ -29,7 +29,7 @@ protected:
 	bool isActive;
 public:
 	Entity(int x, int y, Direction dir, std::vector<Tile*>& tiles, char character, WORD colorMask, TileType type);
-	~Entity();
+	virtual ~Entity();
 
 	int GetX() { return x; }
 	int GetY() { return y; }

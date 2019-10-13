@@ -7,6 +7,8 @@
 #include "GameManager.h"
 #include "Dungeon.h"
 
+#include <map>
+
 Map::Map(const char * path)
 {
 	buffer = new CHAR_INFO[SCREEN_HEIGHT * SCREEN_WIDTH];
@@ -24,18 +26,13 @@ Map::Map(const char * path)
 	//sert à init le buffer
 	ReadConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
-	//LoadMap(path);
-	Dungeon::GenCave(3, tiles);
+
 	player = new Player(2, 2, DOWN, 30, 2, '@', tiles, TileType::PLAYER);
-	//enemy = new Enemy(5, 5, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles);
+	Dungeon::GenCave(3, tiles, *player);
+	
 	hud = new HUD(10, 50, 3, *player);
 
 	entities.push_back(player);
-	//entities.push_back(enemy);
-	//entities.push_back(new Enemy(6, 6, DOWN, 5, 2, '!', FOREGROUND_BLUE | FOREGROUND_GREEN, tiles));
-
-	tiles[player->GetX() * SCREEN_HEIGHT + player->GetY()] = player;
-//	tiles[enemy->GetX() * SCREEN_HEIGHT + enemy->GetY()] = enemy;
 }
 
 Map::~Map()
@@ -181,35 +178,51 @@ void Map::AddEntity(Entity * ent)
 	entitiesToAdd.push_back(ent);
 }
 
+void Map::ResetMap()
+{
+	//clears all the actors because we are loading another map
+	for (Entity* a : entities)
+	{
+		//TODO: find a better solution
+		if (auto p = dynamic_cast<Player*>(a))
+		{
+		}
+		else
+		{
+			delete a;
+		}
+	}
+
+	entities.clear();
+
+	//resets the tiles
+	for (int i = 0; i < SCREEN_HEIGHT; i++)
+	{
+		for (int j = 0; j < SCREEN_WIDTH; j++)
+		{
+			tiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().groundTile;
+		}
+	}
+}
+
+//Generates a map from the dungeonGenerator
+void Map::LoadMap()
+{
+	ResetMap();
+
+	Dungeon::GenCave(3, tiles, *player);
+	
+	entities.push_back(player);
+}
+
 void Map::LoadMap(const char * path)
 {
 	std::ifstream stream(path);
 
 	if (!stream.fail())
 	{
-		//clears all the actors because we are loading another map
-		for (Entity* a : entities)
-		{
-			//TODO: find a better solution
-			if (auto p = dynamic_cast<Player*>(a))
-			{}
-			else
-			{
-				delete a;
-			}
-		}
 
-		entities.clear();
-
-		//resets the tiles
-		for (int i = 0; i < SCREEN_HEIGHT; i++)
-		{
-			for (int j = 0; j < SCREEN_WIDTH; j++)
-			{
-				tiles[i * SCREEN_HEIGHT + j]->character = ' ';
-				tiles[i * SCREEN_HEIGHT + j]->colorMask = 0;
-			}
-		}
+		ResetMap();
 
 		std::string str;
 		char c;

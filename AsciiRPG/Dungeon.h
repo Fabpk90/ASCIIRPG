@@ -2,6 +2,8 @@
 #include "Tile.h"
 #include <vector>
 
+#include "Player.h"
+
 class Dungeon
 {
 private:
@@ -10,6 +12,9 @@ private:
 
 	static void GenRandomWalls(std::vector<char> &tiles);
 	static void GenWallAround(std::vector<char>& finalTiles);
+	static void GenPlayerPosition(Player& player, std::vector<char>& tiles);
+	static void GenExit(std::vector<char>& finalTiles);
+	static bool AreNeighboorsCellsFree(std::vector<char>& tiles, int x, int y);
 public:
 	Dungeon(int nb_room);
 	~Dungeon();
@@ -20,7 +25,7 @@ public:
 	void GenAlea();
 
 	//Assumes that the vector passed in has a SCREENX * SCREENY size
-	static void GenCave(int iterations, std::vector<Tile*>& finalTiles);
+	static void GenCave(int iterations, std::vector<Tile*>& finalTiles, Player& player);
 	
 };
 

@@ -12,6 +12,8 @@ private:
 	GameManager();
 	
 	static GameManager *instance;
+	int level;
+	int maxLevel;
 
 public:
 
@@ -23,13 +25,17 @@ public:
 	Map* m;
 	Tile *groundTile;
 	Tile *wallTile;
+	Tile* exitTile;
 
 	bool isGameRunning;
+
+	int GetLevel() { return level; }
 
 	static GameManager& GetInstance();
 
 	void LoadMap(const char *path);
 	void Win();
+	void NextLevel();
 
 	DWORD getInput(INPUT_RECORD **eventBuffer);
 };
