@@ -46,7 +46,7 @@ void Projectile::CheckTileForCollision(int x, int y)
 {
 	TileType type = tiles[y * SCREEN_HEIGHT + x]->type;
 
-	if (type == TILE)
+	if (type == TILE || type == EXIT)
 		Die();
 	else if (type == ENEMY || type == PLAYER)
 	{
