@@ -141,7 +141,7 @@ void Dungeon::GenRandomWalls(std::vector<char>& tiles)
 	}
 }
 
-void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles, Player& player)
+void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles, Player& player, std::vector<Entity*>& entities)
 {
 	int wallCount;
 	//used to store the matrix when is being modified
@@ -212,6 +212,9 @@ void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles, Player& pl
 
 	GenWallAround(tiles);
 	GenExit(tiles);
+	GenPlayerPosition(player, tiles);
+
+	finalTiles[player.GetY() * SCREEN_HEIGHT + player.GetX()] = &player;
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
@@ -226,7 +229,7 @@ void Dungeon::GenCave(int iterations, std::vector<Tile*>& finalTiles, Player& pl
 		}
 	}
 
-	GenPlayerPosition(player, tiles);
+	GenEnemies(finalTiles, entities);
 }
 
 void Dungeon::GenWallAround(std::vector<char>& finalTiles)
@@ -280,6 +283,29 @@ void Dungeon::GenExit(std::vector<char>& tiles)
 	tiles[y * SCREEN_HEIGHT + x] = 'E';
 }
 
+void Dungeon::GenEnemies(std::vector<Tile* >& tiles, std::vector<Entity*>& entities)
+{
+	int enemiesToSpawn = (GameManager::GetInstance().GetLevel() + 1) * 2;
+
+	int x = 0;
+	int y = 0;
+
+	std::srand(std::time(nullptr));
+	
+	for (int enemiesSpawned = 0; enemiesSpawned != enemiesToSpawn; enemiesSpawned++)
+	{
+		do
+		{
+			x = std::rand() % SCREEN_WIDTH;
+			y = std::rand() % SCREEN_HEIGHT;
+		} while (!AreNeighboorsCellsFree(tiles, x, y));
+
+		Entity* enemy = new Enemy(x, y, DOWN, 5, 2, 'A', FOREGROUND_RED, tiles);
+		tiles[y * SCREEN_HEIGHT + x] = enemy;
+		entities.push_back(enemy);
+	}
+}
+
 bool Dungeon::AreNeighboorsCellsFree(std::vector<char>& tiles, int x, int y)
 {
 	//checking the 9 cells
@@ -294,6 +320,24 @@ bool Dungeon::AreNeighboorsCellsFree(std::vector<char>& tiles, int x, int y)
 	if (tiles[(y + 1) * SCREEN_HEIGHT + x] != ' ') return false;
 	if (tiles[(y + 1) * SCREEN_HEIGHT + x + 1] != ' ') return false;
 	
+
+	return true;
+}
+
+bool Dungeon::AreNeighboorsCellsFree(std::vector<Tile*>& tiles, int x, int y)
+{
+	//checking the 9 cells
+
+	if (tiles[y * SCREEN_HEIGHT + x]->character != ' ') return false;
+	if (tiles[(y - 1) * SCREEN_HEIGHT + x - 1]->character != ' ') return false;
+	if (tiles[(y - 1) * SCREEN_HEIGHT + x]->character != ' ') return false;
+	if (tiles[(y - 1) * SCREEN_HEIGHT + x + 1]->character != ' ') return false;
+	if (tiles[(y)*SCREEN_HEIGHT + x - 1]->character != ' ') return false;
+	if (tiles[(y)*SCREEN_HEIGHT + x + 1]->character != ' ') return false;
+	if (tiles[(y + 1) * SCREEN_HEIGHT + x - 1]->character != ' ') return false;
+	if (tiles[(y + 1) * SCREEN_HEIGHT + x]->character != ' ') return false;
+	if (tiles[(y + 1) * SCREEN_HEIGHT + x + 1]->character != ' ') return false;
+
 
 	return true;
 }

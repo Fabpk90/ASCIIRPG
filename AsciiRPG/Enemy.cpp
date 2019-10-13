@@ -44,7 +44,7 @@ void Enemy::Update()
 
 PositionBlocked Enemy::ChangePosition(int x, int y)
 {
-	if (tiles[y * SCREEN_HEIGHT + x]->type != DOOR)
+	if (tiles[y * SCREEN_HEIGHT + x]->type != EXIT)
 	{
 		return Entity::ChangePosition(x, y);
 	}

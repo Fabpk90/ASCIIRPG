@@ -28,7 +28,7 @@ Map::Map(const char * path)
 
 
 	player = new Player(2, 2, DOWN, 30, 2, '@', tiles, TileType::PLAYER);
-	Dungeon::GenCave(3, tiles, *player);
+	Dungeon::GenCave(3, tiles, *player, entities);
 	
 	hud = new HUD(10, 50, 3, *player);
 
@@ -210,7 +210,7 @@ void Map::LoadMap()
 {
 	ResetMap();
 
-	Dungeon::GenCave(3, tiles, *player);
+	Dungeon::GenCave(3, tiles, *player, entities);
 	
 	entities.push_back(player);
 }
