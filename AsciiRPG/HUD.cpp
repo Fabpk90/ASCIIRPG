@@ -4,7 +4,7 @@
 
 
 HUD::HUD(short sizeX, short posX, short posY, Player & player) :
-	sizeX(sizeX), posX(posX), posY(posY), player(player)
+	sizeX(sizeX), player(player)
 {
 	dwBufferSize.X = sizeX;
 	dwBufferSize.Y = 1;
@@ -14,9 +14,9 @@ HUD::HUD(short sizeX, short posX, short posY, Player & player) :
 	rcRegion = { posX, posY, SCREEN_HEIGHT + posX, SCREEN_WIDTH};
 
 	healthText = "health: ";
-	healthBaseSize = 8;
+	
 
-	buffer = new CHAR_INFO[sizeX + healthBaseSize];
+	buffer = new CHAR_INFO[sizeX + healthText.size()];
 	
 
 	ReadConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
@@ -26,7 +26,7 @@ HUD::HUD(short sizeX, short posX, short posY, Player & player) :
 		buffer[i].Attributes = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED;
 	}
 
-	for (size_t i = 0; i < healthBaseSize; i++)
+	for (size_t i = 0; i < healthText.size(); i++)
 	{
 		buffer[i].Char.AsciiChar = healthText[i];
 	}
@@ -45,7 +45,7 @@ void HUD::Draw()
 
 	for (int i = 0; i < str.length(); i++)
 	{
-		buffer[i + healthBaseSize].Char.AsciiChar = str[i];
+		buffer[i + healthText.size()].Char.AsciiChar = str[i];
 	}
 
 	WriteConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO *)buffer, dwBufferSize,

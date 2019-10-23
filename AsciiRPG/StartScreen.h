@@ -1,25 +1,21 @@
 #pragma once
-
 #include <Windows.h>
-#include "Player.h"
+#include <string>
 
-class HUD
+class StartScreen
 {
 private:
-	Player& player;
-	short sizeX;
-
 	CHAR_INFO* buffer;
 
 	COORD dwBufferSize;
 	COORD dwBufferCoord;
 	SMALL_RECT rcRegion;
 
-	std::string healthText;
-
+	std::string text;
 public:
-	HUD(short sizeX, short posX, short posY, Player& player);
-	~HUD();
+	StartScreen(short posX, short posY);
 	void Draw();
+	void Clear();
+	~StartScreen();
 };
 

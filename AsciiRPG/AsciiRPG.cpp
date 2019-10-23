@@ -2,10 +2,10 @@
 //
 
 #include <io.h>
-#include <fcntl.h>
 
 #include "GameManager.h"
 #include "NYTimer.h"
+#include "StartScreen.h"
 
 
 int main()
@@ -15,6 +15,25 @@ int main()
 
 	NYTimer* timer = new NYTimer();
 	timer->start();
+
+	StartScreen start(5, 5);
+	INPUT_RECORD* input = nullptr;
+
+	bool keyPressed = false;
+	
+	//ugly menu
+	/*do
+	{
+		start.Draw();
+		gm.getInput(&input);
+
+		if (input && input->Event.KeyEvent.bKeyDown)
+			keyPressed = true;
+	} while (!keyPressed);*/
+
+	start.Draw();
+	getchar();
+	start.Clear();
 
 	while (gm.isGameRunning)
 	{
@@ -29,4 +48,3 @@ int main()
 	
     return 0;
 }
-
