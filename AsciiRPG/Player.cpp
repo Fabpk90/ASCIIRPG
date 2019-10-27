@@ -110,24 +110,6 @@ PositionBlocked Player::ChangePosition(int x, int y)
 		GameManager::GetInstance().NextLevel();
 	}
 
-	/*switch (dir)
-	{
-	case UP:
-		character = 9651;
-		break;
-	case RIGHT:
-		character = 9655;
-		break;
-	case DOWN:
-		character = 9661;
-		break;
-	case LEFT:
-		character = 9665;
-		break;
-	default:
-		break;
-	}*/
-
 	return p;
 }
 

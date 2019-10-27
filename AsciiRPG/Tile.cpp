@@ -12,10 +12,9 @@ Tile::Tile(wchar_t character, WORD colorMask, TileType type) : character(charact
 
 
 Tile::~Tile()
-{
-}
+= default;
 
-bool Tile::isObstacle()
+bool Tile::isObstacle() const
 {
 	return character == ' ' ? false : true;
 }

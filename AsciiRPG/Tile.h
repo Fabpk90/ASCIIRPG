@@ -14,17 +14,19 @@ enum TileType
 	EXIT
 };
 
+
+//Represents the minimal object in the game
 class Tile
 {
 public:
 	Tile();
 	Tile(wchar_t character, WORD colorMask, TileType type);
-	~Tile();
+	virtual ~Tile();
 
 	wchar_t character;
 	WORD colorMask;
 	TileType type;
 
-	bool isObstacle();
+	bool isObstacle() const;
 };
 

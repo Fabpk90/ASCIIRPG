@@ -7,6 +7,8 @@ class HUD
 {
 private:
 	Player& player;
+	
+	//Size of the first dimension of the buffer
 	short sizeX;
 
 	CHAR_INFO* buffer;

@@ -17,11 +17,13 @@ int main()
 	timer->start();
 
 	StartScreen start(5, 5);
-	INPUT_RECORD* input = nullptr;
-
-	bool keyPressed = false;
+	
 	
 	//ugly menu
+	//not used because too unstable
+	//INPUT_RECORD* input = nullptr;
+
+	//bool keyPressed = false;
 	/*do
 	{
 		start.Draw();
@@ -31,6 +33,7 @@ int main()
 			keyPressed = true;
 	} while (!keyPressed);*/
 
+	//hax
 	start.Draw();
 	getchar();
 	start.Clear();

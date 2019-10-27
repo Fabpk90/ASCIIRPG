@@ -12,7 +12,11 @@ private:
 	GameManager();
 	
 	static GameManager *instance;
+
+	//current level
 	int level;
+
+	//indicates the number of level to generate
 	int maxLevel;
 
 public:
@@ -29,7 +33,7 @@ public:
 
 	bool isGameRunning;
 
-	int GetLevel() { return level; }
+	int GetLevel() const { return level; }
 
 	static GameManager& GetInstance();
 

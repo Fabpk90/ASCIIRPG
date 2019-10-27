@@ -15,9 +15,8 @@ public:
 	Projectile(int x, int y, int damage, char character, Direction dir, std::vector<Tile*>& tiles, TileType shooterTileType);
 	~Projectile();
 
-	int GetDamage() { return damage; }
+	int GetDamage() const { return damage; }
 
-	// Hérité via Entity
 	virtual void Die() override;
 	virtual void Update() override;
 };

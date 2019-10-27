@@ -18,6 +18,8 @@ enum PositionBlocked
 	NOT_BLOCKED
 };
 
+
+//An Entity can be moved, updated and die
 class Entity : public Tile
 {
 protected:
@@ -31,17 +33,18 @@ public:
 	Entity(int x, int y, Direction dir, std::vector<Tile*>& tiles, char character, WORD colorMask, TileType type);
 	virtual ~Entity();
 
-	int GetX() { return x; }
-	int GetY() { return y; }
+	int GetX() const { return x; }
+	int GetY() const { return y; }
 
-	Direction GetDirection() { return dir; }
+	Direction GetDirection() const { return dir; }
 	std::vector<Tile*>& GetTiles() { return tiles; }
 
-	bool GetIsActive() { return isActive; }
+	bool GetIsActive() const { return isActive; }
 
 	virtual void Die() = 0;
 	virtual void Update() = 0;
 
+	// Returns the type of blockage, could be none
 	virtual PositionBlocked ChangePosition(int x, int y);
 	std::pair<int, int> GetPositionFromDirection();
 };
