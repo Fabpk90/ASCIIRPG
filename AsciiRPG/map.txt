@@ -1,22 +1,15 @@
-         X3X3X3X3X3X3X3X3X3X3X3X3
-         X3          X3              X3X3X3X3X3X3X3X3
-X3X3X3X3X3X3X3X3 X3          X3              X3      X3
-X3      X3 X3          X3              X3      X3 X3X3X3X3
-X3      X3 X3          X3              X3      X3 X3  X3
-X3      X3 X3          X3              X3      X3 X3  X3
-X3      X3 X3          X3 X3X3X3X3X3X3X3X3X3X3X3X3 X3      X3 X3X3X3X3
-X3      X3 X3          X3 X3          X3 X3      X3
-X3      X3 X3          X3 X3          X3 X3X3X3X3X3X3X3X3
-X3X3X3X3X3X3X3X3 X3          X3 X3          X3 
-         X3          X3 X3          X3 
-         X3X3X3X3X3X3X3X3X3X3X3X3 X3          X3 X3X3X3X3X3X3X3X3X3X3
-                      X3          X3 X3        X3
-                      X3          X3 X3        X3 X3X3X3X3
-                      X3          X3 X3        X3 X3  X3
-                      X3          X3 X3        X3 X3  X3
-                      X3          X3 X3        X3 X3X3X3X3
-                      X3X3X3X3X3X3X3X3X3X3X3X3 X3        X3
-                                   X3        X3 X3X3X3X3
-                                   X3        X3 X3  X3
-                                   X3X3X3X3X3X3X3X3X3X3 X3  X3
-                                              X3X3X3X3
+XXXXXXXX     E       X   X
+X                    X   X
+X                    X   X
+X                    X   X
+X      X             X   X
+X      X             X   X
+XXXXXXXX  XX  XX  XX XXXXX
+                         X
+                         X
+XXXXXXXX    XXXXXXXXXXXXXX
+X          X
+X          X
+X          X
+X          X
+XXXXXXXXXXXX

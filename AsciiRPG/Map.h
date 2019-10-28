@@ -41,8 +41,6 @@ public:
 
 	void Draw();
 
-	WORD GetTileMaskValue(int val);
-
 	Player& GetPlayer() { return *player; }
 
 	void EntityDies(Entity* ent);

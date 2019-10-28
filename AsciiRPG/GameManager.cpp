@@ -10,7 +10,7 @@ GameManager::GameManager()
 	handleInput = (HANDLE)GetStdHandle(STD_INPUT_HANDLE);
 
 	isGameRunning = true;
-	level = 0;
+	level = -1;
 	maxLevel = 3;
 
 	m = nullptr;

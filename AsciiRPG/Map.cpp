@@ -19,20 +19,23 @@ Map::Map(const char * path)
 	{
 		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
-			tiles[i * SCREEN_HEIGHT + j] = new Tile(' ', 0, ENV);
+			tiles[i * SCREEN_HEIGHT + j] = GameManager::GetInstance().groundTile;
 		}
 	}
 
 	//sert à init le buffer
 	ReadConsoleOutput(GameManager::GetInstance().handleOutput, (CHAR_INFO*)buffer, dwBufferSize, dwBufferCoord, &rcRegion);
 
+	LoadMap(path);
 
 	player = new Player(2, 2, DOWN, 30, 2, '@', tiles, TileType::PLAYER);
-	Dungeon::GenCave(3, tiles, *player, entities);
+	//Dungeon::GenCave(3, tiles, *player, entities);
 	
 	hud = new HUD(10, 50, 3, *player);
 
 	entities.push_back(player);
+
+	
 }
 
 Map::~Map()
@@ -61,7 +64,7 @@ void Map::Draw()
 	}
 
 	//checks each frame if actors are to be added
-	if (entitiesToAdd.size())
+	if (!entitiesToAdd.empty())
 	{
 		for (Entity* ent : entitiesToAdd)
 		{
@@ -72,7 +75,7 @@ void Map::Draw()
 
 
 	//checks each frame if actors are to be deleted
-	if (entitiesToDestroy.size())
+	if (!entitiesToDestroy.empty())
 	{
 		for (Entity* index : entitiesToDestroy)
 		{
@@ -125,48 +128,6 @@ void Map::UpdateBuffer()
 	}
 }
 
-WORD Map::GetTileMaskValue(int val)
-{
-	//TODO: check la val
-
-	WORD d;
-
-	switch (val)
-	{
-	case 1:
-		d = FOREGROUND_RED;
-		break;
-	case 2:
-		d = FOREGROUND_BLUE;
-		break;
-
-	case 3:
-		d = FOREGROUND_GREEN;
-		break;
-
-	case 4:
-		d = FOREGROUND_GREEN | FOREGROUND_RED;
-		break;
-
-	case 5:
-		d = FOREGROUND_BLUE | FOREGROUND_GREEN;
-		break;
-
-	case 6:
-		d = FOREGROUND_RED | FOREGROUND_BLUE;
-		break;
-
-	case 7: 
-		d = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED;
-		break;
-
-	default:
-		break;
-	}
-
-	return d;
-}
-
 //called by an actor when he dies
 void Map::EntityDies(Entity * ent)
 {
@@ -217,6 +178,9 @@ void Map::LoadMap()
 
 void Map::LoadMap(const char * path)
 {
+
+	//TODO: it'd nice to find a better solution than pushing into a vector
+	
 	std::ifstream stream(path);
 
 	if (!stream.fail())
@@ -225,8 +189,7 @@ void Map::LoadMap(const char * path)
 		ResetMap();
 
 		std::string str;
-		char c;
-		int att = 0;
+		
 		int width = 0;
 		int height = 0;
 
@@ -236,17 +199,28 @@ void Map::LoadMap(const char * path)
 			width = 0;
 			for (int i = 0; i < str.length(); i++)
 			{
-				if (str[i] != ' ')
+				switch (str[i])
 				{
-					buffer[height * SCREEN_HEIGHT + width].Char.AsciiChar = str[i];
-					buffer[height * SCREEN_HEIGHT + width].Attributes = GetTileMaskValue((int)(str[i + 1] - '0'));
+				case ' ':
+					buffer[height * SCREEN_HEIGHT + width].Char.AsciiChar = GameManager::GetInstance().groundTile->character;
+					buffer[height * SCREEN_HEIGHT + width].Attributes = GameManager::GetInstance().groundTile->colorMask;
 
-					tiles[height * SCREEN_HEIGHT + width]->character = str[i];
-					tiles[height * SCREEN_HEIGHT + width]->colorMask = buffer[height * SCREEN_HEIGHT + width].Attributes;
+					tiles[height * SCREEN_HEIGHT + width] = (GameManager::GetInstance().groundTile);
+					break;
 
-					tiles[height * SCREEN_HEIGHT + width]->type = str[i] != ' ' ? TILE : ENV;
+				case 'X':
+					buffer[height * SCREEN_HEIGHT + width].Char.AsciiChar = GameManager::GetInstance().wallTile->character;
+					buffer[height * SCREEN_HEIGHT + width].Attributes = GameManager::GetInstance().wallTile->colorMask;
+					
+					tiles[height * SCREEN_HEIGHT + width] = (GameManager::GetInstance().wallTile);
+					break;
 
-					i++;
+				case 'E':
+					buffer[height * SCREEN_HEIGHT + width].Char.AsciiChar = GameManager::GetInstance().exitTile->character;
+					buffer[height * SCREEN_HEIGHT + width].Attributes = GameManager::GetInstance().exitTile->colorMask;
+
+					tiles[height * SCREEN_HEIGHT + width] = (GameManager::GetInstance().exitTile);
+					break;
 				}
 
 				width++;
